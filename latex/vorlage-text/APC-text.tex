@@ -1,0 +1,52 @@
+\documentclass[a4paper,11pt,oneside]{book}
+
+%% Zeichenkodierung
+
+\usepackage[latin1]{inputenc}
+
+%% Deutsches Sprachpaket
+\usepackage[german]{babel}
+
+%% Grafik-Einbindung
+\usepackage{graphicx}
+
+%% Mathe-Einbindung
+\usepackage{amsmath,amsfonts,amssymb,bbm}
+
+%% Schriftart ändern auf Computer Modern Sans Serif
+\usepackage[T1]{fontenc}
+\renewcommand*\familydefault{\sfdefault}
+
+%% Metadaten des Dokuments
+\title{Kurztitel}
+\author{Max Mustermann}
+\date{SoSe 2012}
+
+%% Literaturverzeichnis nach nature-Vorbild
+\usepackage[square,numbers,sort&compress]{natbib}
+\bibliographystyle{abbrvnat}
+
+%% Einzug nach Absatz und Zwischenraum
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+%% mytitle Kommando um den Autor zu übernehmen
+\newcommand{\writer}[1]{%
+\vspace*{-10mm}\hspace*{10mm}\hfill{\normalfont bearbeitet von \emph{#1}}%
+}
+
+\begin{document}
+
+%% Kopfzeile und Seitenzahlen
+\pagestyle{headings}
+\renewcommand{\chaptermark}[1]{\markright{#1}{}}
+\pagenumbering{arabic}
+
+%% Sample
+\include{sample}
+
+%% Literaturverzeichnis
+\addcontentsline{toc}{chapter}{Literaturverzeichnis}
+\bibliography{sample}
+
+\end{document}

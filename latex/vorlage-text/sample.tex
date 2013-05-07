@@ -1,0 +1,71 @@
+\chapter[Kurztitel]{Langtitel: Welcher nur bei der Kapitelüberschrift erscheint}
+\writer{Sebastian Hoffmann}
+
+\section{Einleitung}
+
+Die einführende Literatur für dieses Seminarthema stammt aus \emph{Introduction to Algorithms} \cite[Kapitel 1ff.]{Cormen} von \citeauthor{Cormen} aus dem Jahre \citeyear{Cormen}. Weitere Informationen über das Zitieren mit dem Natbib Paket finden sich unter: 
+\begin{center}
+\texttt{http://merkel.zoneo.net/Latex/natbib.php}
+\end{center}
+Das Standardwerk \cite{Cormen} ist folgendermaßen in der sample.\texttt{bib}-Datei gespeichert und über das Schlüsselwort \texttt{Cormen} verfügbar:
+
+\begin{verbatim}
+@book{Cormen,
+ author = {Cormen, Thomas H. and
+           Stein, Clifford and
+           Rivest, Ronald L. and
+           Leiserson, Charles E.},
+ title = {Introduction to Algorithms},
+ year = {2001},
+ isbn = {0070131511},
+ edition = {2nd},
+ publisher = {McGraw-Hill Higher Education},
+}
+\end{verbatim}
+
+
+\section{Hauptteil}
+
+In diesem Teil schauen wir uns ganz kurz ein paar \LaTeX Befehle an, die für mathematische Formulierungen notwendig sind. Da es dazu aber zahlreiche Dokumente im Internet gibt, gibt es hier eine altbekannte Formel $a^2+b^2=c^2$ lediglich in ein paar verschiedenen Darstellungen
+$$a^2+b^2=c^2$$
+welche man natürlich auch nummerieren und mit einem Schlüsselwort versehen kann
+\begin{equation}
+\label{eq:pythagoras}
+a^2+b^2=c^2
+\end{equation}
+um darauf wieder verweisen zu können -- siehe \eqref{eq:pythagoras}. Man kann das natürlich auch als Skalarprodukt darstellen
+$$\begin{pmatrix} a & b \end{pmatrix} \cdot \begin{pmatrix} a \\ b \end{pmatrix} = c^2$$
+oder mit einer Tabelle schemenhaftes ein rechtwinkliges Dreieck andeuten
+\begin{center}
+\begin{tabular}{clcc}
+    & $\vdots\ddots$ \\
+$a$ & $\vdots$ & $\ddots$ & $c$\\
+    & $\vdots\hdots$ & $\hdots$ & $\ddots$\hspace{-5mm}$\hdots$ \\
+    &          & $b$ \\
+\end{tabular}
+\end{center}
+
+
+\section{Schlussteil}
+
+Für die Kompilierung mit \texttt{latex} -- nicht \texttt{pdflatex} -- nutzen wir das Einfügen von Bildern im \texttt{eps}-Format:
+
+\begin{verbatim}
+\begin{figure}[htb]
+\centering\includegraphics[keepaspectratio,width=4cm]{Logo.eps}
+\caption{... (siehe Abbildung \ref{fig:logo})...
+\label{fig:logo}
+\end{figure}
+\end{verbatim}
+
+\begin{figure}[htb]
+\centering\includegraphics[keepaspectratio,width=4cm]{Logo.eps}
+\caption{Das ist das Logo des Instituts für Informatik der JGU, worauf wir auch mit einem einfachen Aufruf verweisen können (siehe Abbildung \ref{fig:logo}). Die Abbildung wird fließend in den Text eingebunden, und zwar nach den Prioritäten \textbf{h}ere, \textbf{t}op, \textbf{b}ottom.}
+\label{fig:logo}
+\end{figure}
+
+Dieser Quellcodeschnipsel steht direkt darunter, aber es kann passieren, dass \LaTeX das Bild hier nicht sinnvoll platzieren kann und es deshalb versucht an den Anfang (dann Ende) der nächsten Seite zu stellen.
+
+\section{Anhang}
+
+Viel Spaß beim Experimentieren!

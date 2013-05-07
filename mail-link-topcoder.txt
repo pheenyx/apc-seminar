@@ -1,0 +1,14 @@
+Hallo,
+
+eure Aufgabe ist Skyline.
+
+Ein guter Startpunkt für die Theorie ist das Paper im Anhang (removed).
+Als Einstieg eignet sich das Tutorial auf TopCoder sehr gut:
+http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor#Range_Minimum_Query_%28RMQ%29
+
+Die Aufgabe ist recht fies (denke ich mal) und der Teufel steckt im
+Detail. Auf jeden Fall habe ich in Beispiele ein recht starkes
+Beispiel (Nr. 3) mitaufgenommen, so dass man da die meisten Probleme
+sehen sollte.
+
+Viel Spaß, Egor
