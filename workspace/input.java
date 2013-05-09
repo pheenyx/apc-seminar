@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Queue;
 
 
 public class input {
@@ -17,9 +16,9 @@ public class input {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-		int[] h = {3,6,5,6,2,4};
-		int n = 6;
-		int m = 6;
+		int[] h = {5,0,7,0,2,6,2};
+		int n = 7;
+		int m = 7;
 		int[] r = new int[n];
 		
 		int j=0;
@@ -32,86 +31,78 @@ public class input {
 		}
 		
 		print(r);
-		
-		int [][] test = process2(r, r.length);
-//		System.out.println(Arrays.toString(r));
-//		for(int i=0;i<test.length;++i){
-//		System.out.println(Arrays.toString(test[i]));
-//		}
-//		
-//		System.out.println(min(0,n-1,r,test));
-		
-		int minimum = min(0,n-1, r, test);
-		ArrayList<int[]> interval = new ArrayList<int[]>();
-		int area = n*minimum;
-		
-		int[] links = new int[2];
-		links[0] = 0;
-		links[1] = minimum-1;
-		
-		int [] rechts = new int[2];
-		rechts[0] = minimum+1;
-		rechts[1] = n;
-
-		if(links[0] == links[1]){
-			if(links[0] > area){
-				area = links[0]; 
-			}
-		}else {
-			interval.add(links);
-		}
-		
-		if(rechts[0] == rechts[1]){
-			if(rechts[0] > area){
-				area = rechts[0]; 
-			}
+		if(n == 1){
+			System.out.println(r[n-1]);
 		}else{
-			interval.add(rechts);
-		}
-				
-		while(!interval.isEmpty()){
+			int [][] sparseTable = process2(r, r.length);
 			
-			int[] tmp = interval.remove(0);
-			int minTmp = min(tmp[0], tmp[1], r, test);
-			if(minTmp*(tmp[1]-tmp[0]) > area){
-				area = minTmp*(tmp[1]-tmp[0]); 
-			}
+			int minimum = min(0,n-1, r, sparseTable);
+			ArrayList<int[]> interval = new ArrayList<int[]>();
+			int area = n*r[minimum];
 			
-			int[] linksTmp = new int[2];
-			linksTmp[0] = tmp[0];
-			linksTmp[1] = minTmp-1;
-			
-			int[] rechtsTmp = new int[2];
-			rechtsTmp[0] = minTmp+1;
-			rechtsTmp[1] = tmp[1];
-			
-			if(linksTmp[0] == linksTmp[1]){
-				if(linksTmp[0] > area){
-					area = linksTmp[0]; 
-				}
-			}else {
-				interval.add(linksTmp);
-			}
-			
-			if(rechtsTmp[0] == rechtsTmp[1]){
-				if(rechtsTmp[0] > area){
-					area = rechtsTmp[0]; 
+			if(minimum == 0){
+				if(r[0] > area){
+					area = r[0];
 				}
 			}else{
-				interval.add(rechtsTmp);
+				int[] links = new int[2];
+				links[0] = 0;
+				links[1] = minimum-1;
+				interval.add(links);
 			}
+			
+			if(minimum == n-1){
+				if(r[minimum] > area){
+					area = r[minimum];
+				}
+			}else{
+				int [] rechts = new int[2];
+				rechts[0] = minimum+1;
+				rechts[1] = n-1;
+				interval.add(rechts);
+			}
+			while(!interval.isEmpty()){
+				
+				int[] tmp = interval.remove(0);
+				int minTmp = min(tmp[0], tmp[1], r, sparseTable);
+				
+				if(r[minTmp]*(tmp[1]-tmp[0]+1) > area){
+					area = r[minTmp]*(tmp[1]-tmp[0]+1); 
+				}
+				
+				int[] linksTmp = new int[2];
+				
+				if(tmp[0] == minTmp || tmp[0] <= minTmp-1){
+					if(r[tmp[0]] > area){
+						area = r[tmp[0]];
+					}
+				}else{
+					linksTmp[0] = tmp[0];
+					linksTmp[1] = minTmp-1;
+					interval.add(linksTmp);
+				}
+				
+				int[] rechtsTmp = new int[2];
+				
+				if(minTmp == n-1 || minTmp+1 >= tmp[1]){
+					if(r[tmp[1]] > area){
+						area = r[tmp[1]];
+					}
+				}else{
+				
+					rechtsTmp[0] = minTmp+1;
+					rechtsTmp[1] = tmp[1];
+					interval.add(rechtsTmp);
+				}
+			}
+			System.out.println("MAX: "+area);
 		}
-		System.out.println("MAX: "+area);
 	}
 	
 	public static int min(int i, int j, int[] r, int[][] M){
 		
 		int k  = (int) Math.floor((Math.log(j - i + 1)/Math.log(2)));
-		System.out.println("k="+k+"|i="+i+"|j="+j);
-		System.out.println(r[M[i][k]]);
-		
-		
-		
+				
 		if(r[M[i][k]]   <=	 r[M[(int) (j-Math.pow(2, k) +1)][k]]){
 			return M[i][k];
 		}else{
@@ -147,7 +138,6 @@ public class input {
 		neu = r.clone();
 		Arrays.sort(neu);
 		int maxheight = neu[neu.length-1];
-		System.out.println(maxheight);
 		
 		for (int i = maxheight; i >= 1; i--) {
 			for (int k = 0; k < n; k++) {
