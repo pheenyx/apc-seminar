@@ -1,9 +1,4 @@
-apc-seminar
-===========
-
-Here you can find our seminar lecture and the program that solves our problem set (skyline).
-
-Problem:
+Aufgabe 5: Skyline (RMQ)
 A skyline is the outline formed by a group of buildings against the sky. A certain city has a beautiful
 skyline that's visible to everybody as they approach it by car. You have bought the rights to place an
 advertisement over it, and you would like to do so while preserving the shape of the city. The skyline is
@@ -27,3 +22,30 @@ for i := 0 to n -1
 This code, along with the constraints, ensures that the height of each building is between 0 and 835454956,
 inclusive. In the above code, % is the modulo operator and ^ is the bitwise XOR binary operator. Return
 the area of the rectangle on which you will place your ad.
+
+INPUT
+The input consists of multiple datasets, each in the following format.
+n m
+h
+
+m is the number of elements in h and will be between 1 and 50, inclusive. n is the width of the skyline
+and will be between m and 100000, inclusive. The next line will be a single-space delimited list of m
+integers. Each of these integer will be between 0 and 835454956 inclusive.
+The end of the input is indicated with a line containing only END.
+
+OUTPUT
+For each dataset, one line containing the maximum possible area of the ad.
+
+SAMPLE INPUT
+6 6
+3 6 5 6 2 4
+7 7
+5 0 7 0 2 6 2
+100000 2
+1048589 2097165
+END
+
+SAMPLE OUTPUT
+15
+7
+104858900000

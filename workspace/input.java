@@ -30,6 +30,9 @@ public class input {
 			h[j] = ( ( h[j] ^ h[s]) + 13 ) % 835454957;
 			j = s;
 		}
+		
+		print(r);
+		
 		int [][] test = process2(r, r.length);
 //		System.out.println(Arrays.toString(r));
 //		for(int i=0;i<test.length;++i){
@@ -135,6 +138,29 @@ public class input {
 	      
 	      return M;
 	  }  
+	
+	public static void print(int[]r){
+		//print
+		//find max in array
+		int n = r.length;
+		int[] neu = new int[n];
+		neu = r.clone();
+		Arrays.sort(neu);
+		int maxheight = neu[neu.length-1];
+		System.out.println(maxheight);
+		
+		for (int i = maxheight; i >= 1; i--) {
+			for (int k = 0; k < n; k++) {
+				if (r[k] / i > 0) {
+					System.out.print("▓|");
+				} else {
+					System.out.print(" |");
+				}
+			}
+			System.out.println();
+		}
+		// print end
+	}
 		
 }
 
