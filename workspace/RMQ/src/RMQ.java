@@ -18,7 +18,7 @@ public class RMQ {
             while (true) {
                 String line = reader.readLine();
 
-                if (line.equals("END")) {
+                if (line.startsWith("END")) {
                     break;
                 }
 
