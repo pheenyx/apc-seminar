@@ -16,9 +16,15 @@ public class input {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-		int[] h = {5,0,7,0,2,6,2};
-		int n = 7;
-		int m = 7;
+//		int[] h = {3, 6, 5, 6, 2, 4};
+//		int n = 6;
+//		int m = 6;
+//		int[] h = {5,0,7,0,2,6,2};
+//		int n = 7;
+//		int m = 7;
+		int[] h = {3, 6, 5, 6, 2, 6, 5, 6, 5, 6, 2, 4};
+		int n = 12;
+		int m = 12;
 		int[] r = new int[n];
 		
 		int j=0;
@@ -31,6 +37,8 @@ public class input {
 		}
 		
 		print(r);
+		System.out.println(Arrays.toString(r));
+		
 		if(n == 1){
 			System.out.println(r[n-1]);
 		}else{
@@ -61,41 +69,46 @@ public class input {
 				rechts[1] = n-1;
 				interval.add(rechts);
 			}
+			
+			System.out.println("intervall: 0,"+(n-1)+" min: "+minimum+"  area: "+area);
 			while(!interval.isEmpty()){
 				
 				int[] tmp = interval.remove(0);
 				int minTmp = min(tmp[0], tmp[1], r, sparseTable);
 				
-				if(r[minTmp]*(tmp[1]-tmp[0]+1) > area){
-					area = r[minTmp]*(tmp[1]-tmp[0]+1); 
+				int tmpArea = r[minTmp]*(tmp[1]-tmp[0]+1);
+				if(tmpArea > area){
+					area = tmpArea; 
 				}
+				System.out.println("intervall: "+tmp[0]+","+tmp[1]+" min: "+minTmp+"  area: "+area+" tmparea: "+tmpArea);
 				
-				int[] linksTmp = new int[2];
-				
-				if(tmp[0] == minTmp || tmp[0] <= minTmp-1){
+				//links
+				if(tmp[0] == minTmp || tmp[0] == minTmp-1){
 					if(r[tmp[0]] > area){
 						area = r[tmp[0]];
 					}
 				}else{
+					int[] linksTmp = new int[2];
 					linksTmp[0] = tmp[0];
 					linksTmp[1] = minTmp-1;
 					interval.add(linksTmp);
+					System.out.println("added l interval: "+linksTmp[0]+","+linksTmp[1]);
 				}
 				
-				int[] rechtsTmp = new int[2];
-				
-				if(minTmp == n-1 || minTmp+1 >= tmp[1]){
+				//rechts
+				if(minTmp == tmp[1] || minTmp+1 == tmp[1]){
 					if(r[tmp[1]] > area){
 						area = r[tmp[1]];
 					}
 				}else{
-				
+					int[] rechtsTmp = new int[2];
 					rechtsTmp[0] = minTmp+1;
 					rechtsTmp[1] = tmp[1];
 					interval.add(rechtsTmp);
+					System.out.println("added r interval: "+rechtsTmp[0]+","+rechtsTmp[1]);
 				}
 			}
-			System.out.println("MAX: "+area);
+			System.out.println("MAXarea: "+area);
 		}
 	}
 	
@@ -140,6 +153,7 @@ public class input {
 		int maxheight = neu[neu.length-1];
 		
 		for (int i = maxheight; i >= 1; i--) {
+			System.out.print("|");
 			for (int k = 0; k < n; k++) {
 				if (r[k] / i > 0) {
 					System.out.print("▓|");
@@ -149,6 +163,16 @@ public class input {
 			}
 			System.out.println();
 		}
+		System.out.print("|");
+		for (int i = 0; i < n; i++){
+			System.out.print(i/10+"|");
+		}
+		System.out.println();
+		System.out.print("|");
+		for (int i = 0; i < n; i++){
+			System.out.print(i%10+"|");
+		}
+		System.out.println();
 		// print end
 	}
 		

@@ -2,7 +2,11 @@
 *.class
 
 #eclipse
-.*
+.metadata
+.project
+.cproject
+.settings
+.classpath
 
 # Package Files #
 *.jar
