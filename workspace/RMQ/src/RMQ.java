@@ -1,8 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class RMQ {
 
@@ -94,7 +95,7 @@ public class RMQ {
             int[][] sparseTable = process2(r, r.length);
 
             int minimum = min(0, (int) n - 1, r, sparseTable);
-            ArrayList<int[]> interval = new ArrayList<int[]>();
+            Queue<int[]> interval = new LinkedList<int[]>();
             long area = n * r[minimum];
 
             if (minimum == 0) {
@@ -122,7 +123,7 @@ public class RMQ {
             // System.out.println("intervall: 0,"+(n-1)+" min: "+minimum+"  area: "+area);
             while (!interval.isEmpty()) {
 
-                int[] tmp = interval.remove(0);
+                int[] tmp = interval.poll();
                 int minTmp = min(tmp[0], tmp[1], r, sparseTable);
 
                 long tmpArea = r[minTmp] * (tmp[1] - tmp[0] + 1);
