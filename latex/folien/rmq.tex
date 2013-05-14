@@ -1,0 +1,171 @@
+\documentclass[11pt]{beamer}
+
+%% Zeichenkodierung
+
+\usepackage[latin1]{inputenc}
+
+%% Deutsches Sprachpaket
+\usepackage[german]{babel}
+
+%% Grafik-Einbindung
+\usepackage{graphicx}
+
+%% Mathe-Einbindung
+\usepackage{amsmath,amsfonts,amssymb,bbm}
+
+%% Schriftart ändern auf Computer Modern Sans Serif
+\usepackage[T1]{fontenc}
+\renewcommand*\familydefault{\sfdefault}
+
+%% Beamer Template
+\usetheme{Luebeck}
+
+%% Navigationssymbole ausblenden
+\setbeamertemplate{navigation symbols}{}
+
+%% Seitenzahl und Gesamtanzahl in FußŸleiste
+\setbeamertemplate{footline}[frame number]
+
+%% Metadaten des Dokuments
+\title[RMQ]{Range Minimum Query}
+\author{Michael Mardaus \and Felix Lauenroth}
+\date{21. Mai 2013}
+
+%% Einzug nach Absatz und Zwischenraum
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\begin{frame}{Inhaltsverzeichnis}
+\tableofcontents[pausesections]
+\end{frame}
+
+\section{Allgemeines}
+
+\subsection{Overlays}
+
+\begin{frame}{Effekthascherei}
+\alt<7->{Gutgemeinter Tipp:}{Tipp:}
+\begin{center}
+  \alert<8>{Nicht} \pause zu \pause viele \pause \textbf{\Large Effekte} \pause verwenden\pause!
+\end{center}
+\end{frame}
+
+\subsection{Mehrere Spalten}
+
+\begin{frame}{Zweispaltig}
+\begin{columns}
+\column{.50\textwidth}
+1. Spalte
+\column{.50\textwidth}
+\begin{enumerate}
+\item 2. Spalte
+\item 2. Spalte
+\end{enumerate}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Dreispaltig}
+\begin{columns}
+\column{.33\textwidth}
+1. Spalte
+\column{.33\textwidth}
+2. Spalte
+\column{.33\textwidth}
+3. Spalte
+\end{columns}
+\end{frame}
+
+\section{Strukturierung}
+
+\subsection{Listen}
+
+\begin{frame}{Ungeordnete Listen}
+\begin{itemize}
+  \item Ein Punkt
+  \item Noch ein Punkt
+  \item \ldots
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Geordnete Listen}
+\begin{enumerate}
+  \item Ein Punkt
+  \item Noch ein Punkt
+  \item \ldots
+\end{enumerate}
+\end{frame}
+
+\subsection{Beschreibungen}
+
+\begin{frame}{Beschreibungen}
+\begin{description}
+  \item[Gruppe A] Ein Punkt
+  \item[Gruppe B] Noch ein Punkt
+  \item[Gruppe C] \ldots
+\end{description}
+\end{frame}
+
+\subsection{Blöcke}
+
+\begin{frame}{einfacher Block}
+\begin{block}{Blocktitel}
+  Block
+\end{block}
+\end{frame}
+
+\begin{frame}{Alert-Block}
+\begin{alertblock}{Blocktitel}
+  Alert-Block
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Example-Block}
+\begin{exampleblock}{Blocktitel}
+  Example-Block
+\end{exampleblock}
+\end{frame}
+
+\subsection{Mathematisches}
+
+\begin{frame}{Definition}
+\begin{definition}[von Etwas]
+  Definition
+\end{definition}
+\end{frame}
+
+\begin{frame}{Lemma}
+\begin{lemma}[Über Etwas]
+  Lemma
+\end{lemma}
+\end{frame}
+
+\begin{frame}{Theorem}
+\begin{theorem}[Über Etwas]
+  Theorem
+\end{theorem}
+\end{frame}
+
+\begin{frame}{Beweis}
+\begin{proof}[von Etwas]
+  \texttt{AUTOPROOF = TRUE}
+\end{proof}
+\end{frame}
+
+\thispagestyle{empty}
+
+\begin{frame}
+\begin{center}
+\Huge \textbf{Viel Spaß und Erfolg!}
+\end{center}
+\end{frame}
+
+\end{document}
