@@ -35,6 +35,9 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{8pt}
 
+%% Michaels Addons
+\newcommand*{\Oh}{\mathcal{O}}
+
 \begin{document}
 
 \thispagestyle{empty}
@@ -55,64 +58,144 @@
 \begin{frame}{Überblick}
   \begin{definition}[Range Minimum Query]
     
-    \(   RMQ_{A}(l,r) = arg \)
     
-    \begin{array}[t]{ll} min \\
-      l \leq k \leq r 
-    \end{array}
-    \( A[k] \)
-  \pause  
-  
-  Finden des kleinsten Elements in einem Interval!   
+    \[\text{RMQ}_{A}(\ell,r) = \text{arg} \ \min_{\ell \leq k \leq r } A[k] \]
+    
+  \pause
+  \only<2->{
+  In Worten:\\
+  Gesucht ist der Index $k$ des kleinsten Elements $A[k]$ in einem gegebenen Bereich ($\ell\leq k\leq r$) innerhalb eines Arrays $A$.}
   \end{definition}
+  Bild Beispiel
 \end{frame}
 
 \subsection{Naiver Ansatz}
 
 \begin{frame}
-\begin{block}{Lorem Ipsum}
-  Lorem Ipsum
+\begin{block}{Idee 1 - trivial}
+ Durch das gegebene Array (von $\ell$ bis $r$) durch iterieren und dabei das Minimum merken $\Rightarrow$ Querytime: $\Oh(n)$
 \end{block}
+ \pause
+ \begin{block}{Idee 2 - mit Preprocessing}
+ Preprocessing -- also das Aufbereiten eines zusätzlichen Arrays, für mehrere zukünftige Queries -- kann zu sublinearen Zugriffszeiten führen.\\
+ Erste Idee: Abspeichern der Minima jeder Kombination von Intervallgrenzen in einer 2-dim. Matrix (á la Adjazenzmatrix)\\
+ $\Rightarrow$ Preprocessingtime: $\Oh(n^3)$, Querytime: $\Oh(1)$
+ \end{block}
+
+ 
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{Idee 3 - mit dynamischer Programmierung}
+Ähnliche Idee, allerdings mit dynamischer Programmierung im Preprocessing Schritt.\\
+  $\Rightarrow$ Preprocessingtime: $\Oh(n^2)$, Querytime $\Oh(1)$.
+\end{block}
+\vspace{-6mm}
+  \pause
+  \begin{verbatim}
+ void trivial3(int M[N][N], int A[N], int N){
+      for (i = 0; i < N; i++)
+          M[i][i] = i;
+      for (i = 0; i < N; i++)
+          for (j = i + 1; j < N; j++)
+              if (A[M[i][j - 1]] < A[j])
+                  M[i][j] = M[i][j - 1];
+              else
+                  M[i][j] = j;
+  }
+  \end{verbatim}
+  \vspace{-5mm}
 \end{frame}
 
 
 \section{Effiziente Algorithmen}
+\frame{\sectionpage}
 
-\subsection{Speicher optimal}
+\subsection{Speicheroptimiert}
 
-\begin{frame}
-\begin{block}{Lorem Ipsum}
-Lorem Ipsum
+\begin{frame}[fragile]
+\begin{block}{$\sqrt n$ Teile Algo}
+
+Algorithmus der das Array in $\sqrt n$ Teile teilt und von diesen Teilen jeweils das Minimum speichert.\\[5mm]
+Bild\\[5mm]
+$\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\sqrt n)$
 \end{block}
 \end{frame}
 
 
-\subsection{Zugriff optimal}
+\subsection{Zugriffsoptimiert}
 
-\begin{frame}
+\begin{frame}[fragile]
+\begin{block}{Algo mit Sparse Table}
+Algorithmus erstellt eine $n \times \log n$ Matrix in der Teilarrays der Länge $2^k$ per dynamischer Programmierung berechnet werden\\[5mm]
+Bild von Array\\[5mm]
 
+Code des dynmischen Programmierungschritts:
+\vspace{-5mm}
+\begin{verbatim}
+if (A[M[i][j - 1]] < A[M[i + (1 << (j - 1))][j - 1]])
+    M[i][j] = M[i][j - 1];
+else
+    M[i][j] = M[i + (1 << (j - 1))][j - 1];
+\end{verbatim}
+$\Rightarrow$ Preprocessingtime: $\Oh(n\cdot\log n)$, Querytime: $\Oh(1)$
+\end{block}
 \end{frame}
 
-\section{Unser Problem}
+\section{Problemset}
 
-\subsection{Skyline}
-
-\begin{frame}
-
-\end{frame}
-
-\subsection{Naiver Ansatz}
+\subsection{Beschreibung}
 
 \begin{frame}
+\begin{block}{Skyline}
+Gesucht wird die größtmögliche, zusammenhängende, rechteckige Fläche innerhalb einer gegebenen Skyline.\\
+Die Skyline besteht aus Häusern der Breite 1 und gegebener Höhe (Input pro Haus).
+\end{block}
 
+erklärendes Bild \\[5mm]
 \end{frame}
 
-\subsection{optimierte Version}
+\subsection{Lösung}
+\begin{frame}
+Beschreibung:\\
+\begin{enumerate}
+\item Suchen des Minimums im aktuellen Intervall.
+\item Berechnen der Fläche unterhalb dieses Minimums\\ (Minimum * Intervallbreite) und vergleichen mit bisher gefundener maximalen Fläche.
+\item Teilen des Intervalls in rechtes und linkes Teilproblem (von diesem Minimum aus gesehen).
+\item In diesen beiden Teilproblemen wieder Schritt 1 anwenden.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{Pseudo-Code}
+\vspace{-3mm}
+\begin{verbatim}
+preprocessing();         // compute all minima
+\end{verbatim}
+\pause
+\vspace{-7mm}
+\begin{verbatim}
+area = 0; max = 0;       // initalize
+Q = { Interval(0, N) };
+\end{verbatim}
+\pause
+\vspace{-7mm}
+\begin{verbatim}
+while ( !Q.empty() ){
+	Interval(left, right) = Q.pop();
+    min = RMQ( Interval(left, right) );
+    area = min * (right - left + 1);
+    if ( area > max ) max = area;
+    Q.add(Intervall(left, min - 1 ));
+    Q.add(Intervall(min + 1, right ));
+}
+\end{verbatim}
+\end{block}
+\end{frame}
 
 \begin{frame}
-
+ggf. rekursiver Algorithmus von Skyline?
 \end{frame}
-
 
 \thispagestyle{empty}
 

@@ -35,6 +35,9 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{8pt}
 
+%% Michaels Addons
+\newcommand*{\Oh}{\mathcal{O}}
+
 \begin{document}
 
 \thispagestyle{empty}
@@ -50,122 +53,151 @@
 
 \section{Allgemeines}
 
-\subsection{Overlays}
+\subsection{Überblick}
 
-\begin{frame}{Effekthascherei}
-\alt<7->{Gutgemeinter Tipp:}{Tipp:}
-\begin{center}
-  \alert<8>{Nicht} \pause zu \pause viele \pause \textbf{\Large Effekte} \pause verwenden\pause!
-\end{center}
+\begin{frame}{Überblick}
+  \begin{definition}[Range Minimum Query]
+    
+    
+    \[\text{RMQ}_{A}(\ell,r) = \text{arg} \ \min_{\ell \leq k \leq r } A[k] \]
+    
+  \pause
+  \only<2->{
+  In Worten:\\
+  Gesucht ist der Index $k$ des kleinsten Elements $A[k]$ in einem gegebenen Bereich ($\ell\leq k\leq r$) innerhalb eines Arrays $A$.}
+  \end{definition}
+  Bild Beispiel
 \end{frame}
 
-\subsection{Mehrere Spalten}
+\subsection{Naiver Ansatz}
 
-\begin{frame}{Zweispaltig}
-\begin{columns}
-\column{.50\textwidth}
-1. Spalte
-\column{.50\textwidth}
-\begin{enumerate}
-\item 2. Spalte
-\item 2. Spalte
-\end{enumerate}
-\end{columns}
+\begin{frame}
+\begin{block}{Idee 1 - trivial}
+ Durch das gegebene Array (von $\ell$ bis $r$) durch iterieren und dabei das Minimum merken $\Rightarrow$ Querytime: $\Oh(n)$
+\end{block}
+ \pause
+ \begin{block}{Idee 2 - mit Preprocessing}
+ Preprocessing -- also das Aufbereiten eines zusätzlichen Arrays, für mehrere zukünftige Queries -- kann zu sublinearen Zugriffszeiten führen.\\
+ Erste Idee: Abspeichern der Minima jeder Kombination von Intervallgrenzen in einer 2-dim. Matrix (á la Adjazenzmatrix)\\
+ $\Rightarrow$ Preprocessingtime: $\Oh(n^3)$, Querytime: $\Oh(1)$
+ \end{block}
+
+ 
 \end{frame}
 
-\begin{frame}{Dreispaltig}
-\begin{columns}
-\column{.33\textwidth}
-1. Spalte
-\column{.33\textwidth}
-2. Spalte
-\column{.33\textwidth}
-3. Spalte
-\end{columns}
+\begin{frame}[fragile]
+\begin{block}{Idee 3 - mit dynamischer Programmierung}
+Ähnliche Idee, allerdings mit dynamischer Programmierung im Preprocessing Schritt.\\
+  $\Rightarrow$ Preprocessingtime: $\Oh(n^2)$, Querytime $\Oh(1)$.
+\end{block}
+\vspace{-6mm}
+  \pause
+  \begin{verbatim}
+ void trivial3(int M[N][N], int A[N], int N){
+      for (i = 0; i < N; i++)
+          M[i][i] = i;
+      for (i = 0; i < N; i++)
+          for (j = i + 1; j < N; j++)
+              if (A[M[i][j - 1]] < A[j])
+                  M[i][j] = M[i][j - 1];
+              else
+                  M[i][j] = j;
+  }
+  \end{verbatim}
+  \vspace{-5mm}
 \end{frame}
 
-\section{Strukturierung}
 
-\subsection{Listen}
+\section{Effiziente Algorithmen}
+\frame{\sectionpage}
 
-\begin{frame}{Ungeordnete Listen}
-\begin{itemize}
-  \item Ein Punkt
-  \item Noch ein Punkt
-  \item \ldots
-\end{itemize}
-\end{frame}
+\subsection{Speicheroptimiert}
 
-\begin{frame}{Geordnete Listen}
-\begin{enumerate}
-  \item Ein Punkt
-  \item Noch ein Punkt
-  \item \ldots
-\end{enumerate}
-\end{frame}
+\begin{frame}[fragile]
+\begin{block}{$\sqrt n$ Teile Algo}
 
-\subsection{Beschreibungen}
-
-\begin{frame}{Beschreibungen}
-\begin{description}
-  \item[Gruppe A] Ein Punkt
-  \item[Gruppe B] Noch ein Punkt
-  \item[Gruppe C] \ldots
-\end{description}
-\end{frame}
-
-\subsection{Blöcke}
-
-\begin{frame}{einfacher Block}
-\begin{block}{Blocktitel}
-  Block
+Algorithmus der das Array in $\sqrt n$ Teile teilt und von diesen Teilen jeweils das Minimum speichert.\\[5mm]
+Bild\\[5mm]
+$\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\sqrt n)$
 \end{block}
 \end{frame}
 
-\begin{frame}{Alert-Block}
-\begin{alertblock}{Blocktitel}
-  Alert-Block
-\end{alertblock}
+
+\subsection{Zugriffsoptimiert}
+
+\begin{frame}[fragile]
+\begin{block}{Algo mit Sparse Table}
+Algorithmus erstellt eine $n \times \log n$ Matrix in der Teilarrays der Länge $2^k$ per dynamischer Programmierung berechnet werden\\[5mm]
+Bild von Array\\[5mm]
+
+Code des dynmischen Programmierungschritts:
+\vspace{-5mm}
+\begin{verbatim}
+if (A[M[i][j - 1]] < A[M[i + (1 << (j - 1))][j - 1]])
+    M[i][j] = M[i][j - 1];
+else
+    M[i][j] = M[i + (1 << (j - 1))][j - 1];
+\end{verbatim}
+$\Rightarrow$ Preprocessingtime: $\Oh(n\cdot\log n)$, Querytime: $\Oh(1)$
+\end{block}
 \end{frame}
 
-\begin{frame}{Example-Block}
-\begin{exampleblock}{Blocktitel}
-  Example-Block
-\end{exampleblock}
+\section{Problemset}
+
+\subsection{Beschreibung}
+
+\begin{frame}
+\begin{block}{Skyline}
+Gesucht wird die größtmögliche, zusammenhängende, rechteckige Fläche innerhalb einer gegebenen Skyline.\\
+Die Skyline besteht aus Häusern der Breite 1 und gegebener Höhe (Input pro Haus).
+\end{block}
+
+erklärendes Bild \\[5mm]
 \end{frame}
 
-\subsection{Mathematisches}
-
-\begin{frame}{Definition}
-\begin{definition}[von Etwas]
-  Definition
-\end{definition}
+\subsection{Lösung}
+\begin{frame}
+Beschreibung:\\
+\begin{enumerate}
+\item Suchen des Minimums im aktuellen Intervall.
+\item Berechnen der Fläche unterhalb dieses Minimums\\ (Minimum * Intervallbreite) und vergleichen mit bisher gefundener maximalen Fläche.
+\item Teilen des Intervalls in rechtes und linkes Teilproblem (von diesem Minimum aus gesehen).
+\item In diesen beiden Teilproblemen wieder Schritt 1 anwenden.
+\end{enumerate}
 \end{frame}
 
-\begin{frame}{Lemma}
-\begin{lemma}[Über Etwas]
-  Lemma
-\end{lemma}
+\begin{frame}[fragile]
+\begin{block}{Pseudo-Code}
+\vspace{-3mm}
+\begin{verbatim}
+preprocessing();         // compute all minima
+\end{verbatim}
+\pause
+\vspace{-7mm}
+\begin{verbatim}
+area = 0; max = 0;       // initalize
+Q = { Interval(0, N) };
+\end{verbatim}
+\pause
+\vspace{-7mm}
+\begin{verbatim}
+while ( !Q.empty() ){
+	Interval(left, right) = Q.pop();
+    min = RMQ( Interval(left, right) );
+    area = min * (right - left + 1);
+    if ( area > max ) max = area;
+    Q.add(Intervall(left, min - 1 ));
+    Q.add(Intervall(min + 1, right ));
+}
+\end{verbatim}
+\end{block}
 \end{frame}
 
-\begin{frame}{Theorem}
-\begin{theorem}[Über Etwas]
-  Theorem
-\end{theorem}
-\end{frame}
-
-\begin{frame}{Beweis}
-\begin{proof}[von Etwas]
-  \texttt{AUTOPROOF = TRUE}
-\end{proof}
+\begin{frame}
+ggf. rekursiver Algorithmus von Skyline?
 \end{frame}
 
 \thispagestyle{empty}
 
-\begin{frame}
-\begin{center}
-\Huge \textbf{Viel Spaß und Erfolg!}
-\end{center}
-\end{frame}
 
 \end{document}
