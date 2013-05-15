@@ -67,7 +67,14 @@
   In Worten:\\
   Gesucht ist der Index $k$ des kleinsten Elements $A[k]$ in einem gegebenen Bereich ($\ell\leq k\leq r$) innerhalb eines Arrays $A$.}
   \end{definition}
-  Bild Beispiel
+\end{frame}
+
+\begin{frame}
+\begin{block}{Beispiel 1}
+  \includegraphics<1>[width=0.5\linewidth]{picture/1.png}%
+  \includegraphics<2>[width=0.5\linewidth]{picture/2}%
+  \includegraphics<3>[width=0.5\linewidth]{picture/3}%
+\end{block}
 \end{frame}
 
 \subsection{Naiver Ansatz}
@@ -196,6 +203,40 @@ while ( !Q.empty() ){
 
 \begin{frame}
 ggf. rekursiver Algorithmus von Skyline?
+\end{frame}
+
+\subsection{Optimierung}
+
+\begin{frame}
+\begin{block}{Idee 0}
+ Queue anstatt ArrayList
+\end{block}
+\pause
+\begin{block}{Idee 1}
+Überprüfen der aktuellen Fläche, \\
+denn gegeben war eine maximal Höhe der Gebäude \\
+$\Rightarrow$ falls aktuelle Fläche größer als maximale Höhe, Teilproblem ignorieren
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Idee 2}
+Nutzen von CUDA oder OpenCL um 'Sparse Table' in $\Oh(n)$ zu berechnen.
+
+\includegraphics[width=0.2\linewidth]{picture/cuda_opencl_logos} 
+
+\end{block} 
+
+\end{frame}
+
+\section{Quellen}
+\begin{frame}
+ \begin{block}{Quellen}
+   \url{http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor}
+   \url{http://www.indigorenderer.com/sites/default/files/cuda_opencl_logos.png}
+ \end{block}
 \end{frame}
 
 \thispagestyle{empty}
