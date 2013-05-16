@@ -198,7 +198,7 @@ Q = { Interval(0, N) };
 \vspace{-7mm}
 \begin{verbatim}
 while ( !Q.empty() ){
-		Interval(left, right) = Q.pop();
+    Interval(left, right) = Q.pop();
     min = RMQ( Interval(left, right) );
     area = min * (right - left + 1);
     if ( area > max ) max = area;
