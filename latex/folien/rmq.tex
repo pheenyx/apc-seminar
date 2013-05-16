@@ -163,50 +163,394 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\log n)$
 \subsection{Beschreibung}
 
 \begin{frame}
-\begin{block}{Skyline}
-Gesucht wird die größtmögliche, zusammenhängende, rechteckige Fläche innerhalb einer gegebenen Skyline.\\
-Die Skyline besteht aus Häusern der Breite 1 und gegebener Höhe (Input pro Haus).
+\begin{block}{Skyline-Problem}
+Gesucht wird die größtmögliche, zusammenhängende, rechteckige Fläche innerhalb einer gegebenen Skyline.
 \end{block}
-
-erklärendes Bild \\[5mm]
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-test.png}
+\end{center}
+\vspace{-5mm}
 \end{frame}
 
 \subsection{Lösung}
+
 \begin{frame}
-Beschreibung:\\
+Algorithmus:\\
 \begin{enumerate}
 \item Suchen des Minimums im aktuellen Intervall.
-\item Berechnen der Fläche unterhalb dieses Minimums\\ (Minimum * Intervallbreite) und vergleichen mit bisher gefundener maximalen Fläche.
-\item Teilen des Intervalls in rechtes und linkes Teilproblem (von diesem Minimum aus gesehen).
-\item In diesen beiden Teilproblemen wieder Schritt 1 anwenden.
 \end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt1.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-min-find.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
 \end{frame}
 
+\begin{frame}
+Algorithmus:\\
+\begin{enumerate}
+\setcounter{enumi}{1} 
+\item Berechnen der Fläche unterhalb dieses Minimums (hier 14)
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt2.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-area1.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus:\\
+\begin{enumerate}
+\setcounter{enumi}{2} 
+\item Teilen des Intervalls in rechtes und linkes Teilproblem
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt3.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-left-right1.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus:\\
+\begin{enumerate}
+\setcounter{enumi}{3} 
+\item In diesen beiden Teilproblemen wieder Schritt 1 anwenden.
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt4.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-right1.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 2. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{4}
+\item Suchen des Minimums im aktuellen Intervall.
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt1.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-min-find2.png}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+Algorithmus 2. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{5} 
+\item Berechnen der Fläche unterhalb dieses Minimums (jetzt 15)
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt2.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-area2.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 2. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{6}
+\item Teilen des Intervalls in (rechtes und) linkes Teilproblem
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt3.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-left-right2.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 2. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{7} 
+\item In diesem Teilproblem wieder Schritt 1 anwenden.
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt4.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-left2.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 3. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{8}
+\item Suchen des Minimums im aktuellen Intervall.
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt1.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-min-find3.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 3. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{9} 
+\item Berechnen der Fläche unterhalb dieses Minimums (jetzt 16)
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt2.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-area3.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 3. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{10}
+\item Teilen des Intervalls in rechtes (und linkes) Teilproblem
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt3.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-left-right3.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 3. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{11} 
+\item In diesem Teilproblem wieder Schritt 1 anwenden.
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt4.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-right3.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 4. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{12}
+\item Suchen des Minimums im aktuellen Intervall.
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt1.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-min-find4.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 4. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{13} 
+\item Berechnen der Fläche unterhalb dieses Minimums (nur 12)
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt2.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-area4.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 4. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{14}
+\item Teilen des Intervalls in (rechtes und) linkes Teilproblem
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt3.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-left-right4.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 4. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{15} 
+\item In diesem Teilproblem wieder Schritt 1 anwenden.
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt4.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-left4.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 5. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{16}
+\item Suchen des Minimums im aktuellen Intervall.
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt1.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-min-find5.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus 5. Runde:\\
+\begin{enumerate}
+\setcounter{enumi}{17} 
+\item Berechnen der Fläche unterhalb dieses Minimums (nur 10)
+\end{enumerate}
+\begin{columns}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.4\textheight]{picture/algo-schritt2.png}
+\end{center}
+\column{.50\textwidth}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-area5.png}
+\end{center}
+\end{columns}
+\vspace{-5mm}
+\end{frame}
+
+\begin{frame}
+Algorithmus Endergebnis:\\
+\begin{enumerate}
+\setcounter{enumi}{18}
+\item usw$\dots\ \Longrightarrow$ maximale Fläche = 16
+\end{enumerate}
+\begin{center}
+\includegraphics[height=0.6\textheight]{picture/skyline-end.png}
+\end{center}
+\vspace{-5mm}
+\end{frame}
+
+
 \begin{frame}[fragile]
+\begin{columns}
+\column{.75\textwidth}
 \begin{block}{Pseudo-Code}
-\vspace{-3mm}
-\begin{verbatim}
-preprocessing();         // compute all minima
-\end{verbatim}
-\pause
-\vspace{-7mm}
-\begin{verbatim}
-area = 0; max = 0;       // initalize
-Q = { Interval(0, N) };
-\end{verbatim}
-\pause
-\vspace{-7mm}
-\begin{verbatim}
-while ( !Q.empty() ){
-    Interval(left, right) = Q.pop();
-    min = RMQ( Interval(left, right) );
-    area = min * (right - left + 1);
-    if ( area > max ) max = area;
-    Q.add(Intervall(left, min - 1 ));
-    Q.add(Intervall(min + 1, right ));
-}
-\end{verbatim}
+
+\alert<1>{\tt{while ( !Q.empty() )\{\\}}
+\alert<1>{\tt{\ \ \ \ Interval(left, right) = Q.pop();\\[1.5ex]}}
+
+\only<2->{\alert<2>{\tt{\ \ \ \ min = RMQ( Interval(left, right) );\\[1.5ex]}}}
+
+\only<3->{\alert<3>{\tt{\ \ \ \ area = min * (right - left + 1);\\}}}
+\only<3->{\alert<3>{\tt{\ \ \ \ if ( area > max ) max = area;\\[1.5ex]}}}
+
+\only<4->{\alert<4>{\tt{\ \ \ \ Q.add( Intervall(left, min - 1) );\\}}}
+\only<4->{\alert<4>{\tt{\ \ \ \ Q.add( Intervall(min + 1, right) );}}}
 \end{block}
+\column{.3\textwidth}
+\begin{center}
+\includegraphics<1>[height=0.4\textheight]{picture/algo-schritt4.png}
+\includegraphics<2>[height=0.4\textheight]{picture/algo-schritt1.png}
+\includegraphics<3>[height=0.4\textheight]{picture/algo-schritt2.png}
+\includegraphics<4>[height=0.4\textheight]{picture/algo-schritt3.png}
+\end{center}
+\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -249,8 +593,8 @@ Nutzen von CUDA oder OpenCL um 'Sparse Table' in $\Oh(n)$ zu berechnen.
 
 \begin{frame}
  \begin{block}{Quellen}
-   \url{http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor}
-   \url{http://wcipeg.com/wiki/RMQ}
+   \url{http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor}\\
+   \url{http://wcipeg.com/wiki/RMQ}\\
    \url{http://www.indigorenderer.com/sites/default/files/cuda_opencl_logos.png}
  \end{block}
 \end{frame}
