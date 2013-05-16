@@ -13,7 +13,7 @@
 %% Mathe-Einbindung
 \usepackage{amsmath,amsfonts,amssymb,bbm}
 
-%% Schriftart ändern auf Computer Modern Sans Serif
+%% Schriftart Ã¤ndern auf Computer Modern Sans Serif
 \usepackage[T1]{fontenc}
 \renewcommand*\familydefault{\sfdefault}
 
@@ -23,7 +23,7 @@
 %% Navigationssymbole ausblenden
 \setbeamertemplate{navigation symbols}{}
 
-%% Seitenzahl und Gesamtanzahl in Fußleiste
+%% Seitenzahl und Gesamtanzahl in FuÃŸleiste
 
 \setbeamertemplate{footline}[frame number]
 
@@ -54,9 +54,9 @@
 
 \section{Allgemeines}
 
-\subsection{Überblick}
+\subsection{Ãœberblick}
 
-\begin{frame}{Überblick}
+\begin{frame}{Ãœberblick}
   \begin{definition}[Range Minimum Query]
     
     
@@ -71,11 +71,10 @@
 
 \begin{frame}
 \begin{block}{Beispiel 1}
-  \includegraphics<1>[width=0.5\linewidth]{picture/1.png}%
+  \includegraphics<1>[width=0.5\linewidth]{picture/1}%
   \includegraphics<2>[width=0.5\linewidth]{picture/2}%
   \includegraphics<3>[width=0.5\linewidth]{picture/3}%
-\end{block}
-\end{frame}
+\end{block}\end{frame}
 
 \subsection{Naiver Ansatz}
 
@@ -85,8 +84,8 @@
 \end{block}
  \pause
  \begin{block}{Idee 2 - mit Preprocessing}
- Preprocessing -- also das Aufbereiten eines zusätzlichen Arrays, für mehrere zukünftige Queries -- kann zu sublinearen Zugriffszeiten führen.\\
- Erste Idee: Abspeichern der Minima jeder Kombination von Intervallgrenzen in einer 2-dim. Matrix (á la Adjazenzmatrix)\\
+ Preprocessing -- also das Aufbereiten eines zusÃ¤tzlichen Arrays, fÃ¼r mehrere zukÃ¼nftige Queries -- kann zu sublinearen Zugriffszeiten fÃ¼hren.\\
+ Erste Idee: Abspeichern der Minima jeder Kombination von Intervallgrenzen in einer 2-dim. Matrix (Ã¡ la Adjazenzmatrix)\\
  $\Rightarrow$ Preprocessingtime: $\Oh(n^3)$, Querytime: $\Oh(1)$
  \end{block}
 
@@ -95,7 +94,7 @@
 
 \begin{frame}[fragile]
 \begin{block}{Idee 3 - mit dynamischer Programmierung}
-Ähnliche Idee, allerdings mit dynamischer Programmierung im Preprocessing Schritt.\\
+Ã„hnliche Idee, allerdings mit dynamischer Programmierung im Preprocessing Schritt.\\
   $\Rightarrow$ Preprocessingtime: $\Oh(n^2)$, Querytime $\Oh(1)$.
 \end{block}
 \vspace{-6mm}
@@ -135,7 +134,7 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\sqrt n)$
 
 \begin{frame}[fragile]
 \begin{block}{Algo mit Sparse Table}
-Algorithmus erstellt eine $n \times \log n$ Matrix in der Teilarrays der Länge $2^k$ per dynamischer Programmierung berechnet werden\\[5mm]
+Algorithmus erstellt eine $n \times \log n$ Matrix in der Teilarrays der LÃ¤nge $2^k$ per dynamischer Programmierung berechnet werden\\[5mm]
 Bild von Array\\[5mm]
 
 Code des dynmischen Programmierungschritts:
@@ -150,25 +149,34 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n\cdot\log n)$, Querytime: $\Oh(1)$
 \end{block}
 \end{frame}
 
+\begin{frame}
+\begin{block}{Segment tree Algo}
+Heap Ã¤hnliche Struktur \\
+erklÃ¤rendes Bild \\
+$\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\log n)$
+\end{block}
+\end{frame}
+
 \section{Problemset}
+\frame{\sectionpage}
 
 \subsection{Beschreibung}
 
 \begin{frame}
 \begin{block}{Skyline}
-Gesucht wird die größtmögliche, zusammenhängende, rechteckige Fläche innerhalb einer gegebenen Skyline.\\
-Die Skyline besteht aus Häusern der Breite 1 und gegebener Höhe (Input pro Haus).
+Gesucht wird die grÃ¶ÃŸtmÃ¶gliche, zusammenhÃ¤ngende, rechteckige FlÃ¤che innerhalb einer gegebenen Skyline.\\
+Die Skyline besteht aus HÃ¤usern der Breite 1 und gegebener HÃ¶he (Input pro Haus).
 \end{block}
 
-erklärendes Bild \\[5mm]
+erklÃ¤rendes Bild \\[5mm]
 \end{frame}
 
-\subsection{Lösung}
+\subsection{LÃ¶sung}
 \begin{frame}
 Beschreibung:\\
 \begin{enumerate}
 \item Suchen des Minimums im aktuellen Intervall.
-\item Berechnen der Fläche unterhalb dieses Minimums\\ (Minimum * Intervallbreite) und vergleichen mit bisher gefundener maximalen Fläche.
+\item Berechnen der FlÃ¤che unterhalb dieses Minimums\\ (Minimum * Intervallbreite) und vergleichen mit bisher gefundener maximalen FlÃ¤che.
 \item Teilen des Intervalls in rechtes und linkes Teilproblem (von diesem Minimum aus gesehen).
 \item In diesen beiden Teilproblemen wieder Schritt 1 anwenden.
 \end{enumerate}
@@ -190,7 +198,7 @@ Q = { Interval(0, N) };
 \vspace{-7mm}
 \begin{verbatim}
 while ( !Q.empty() ){
-	Interval(left, right) = Q.pop();
+		Interval(left, right) = Q.pop();
     min = RMQ( Interval(left, right) );
     area = min * (right - left + 1);
     if ( area > max ) max = area;
@@ -213,9 +221,9 @@ ggf. rekursiver Algorithmus von Skyline?
 \end{block}
 \pause
 \begin{block}{Idee 1}
-Überprüfen der aktuellen Fläche, \\
-denn gegeben war eine maximal Höhe der Gebäude \\
-$\Rightarrow$ falls aktuelle Fläche größer als maximale Höhe, Teilproblem ignorieren
+ÃœberprÃ¼fen der aktuellen FlÃ¤che, \\
+denn gegeben war eine maximal HÃ¶he der GebÃ¤ude \\
+$\Rightarrow$ falls aktuelle FlÃ¤che grÃ¶ÃŸer als maximale HÃ¶he, Teilproblem ignorieren
 \end{block}
 
 \end{frame}
@@ -231,10 +239,18 @@ Nutzen von CUDA oder OpenCL um 'Sparse Table' in $\Oh(n)$ zu berechnen.
 
 \end{frame}
 
-\section{Quellen}
+\subsection{Anwendungen}
+\begin{frame}
+\begin{itemize}
+	\item Lowest Common Ancestor (letzter gemeinsamer Vorfahre)
+	\item String matching
+\end{itemize}
+\end{frame}
+
 \begin{frame}
  \begin{block}{Quellen}
    \url{http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor}
+   \url{http://wcipeg.com/wiki/RMQ}
    \url{http://www.indigorenderer.com/sites/default/files/cuda_opencl_logos.png}
  \end{block}
 \end{frame}
