@@ -13,7 +13,7 @@
 %% Mathe-Einbindung
 \usepackage{amsmath,amsfonts,amssymb,bbm}
 
-%% Schriftart Ã¤ndern auf Computer Modern Sans Serif
+%% Schriftart ändern auf Computer Modern Sans Serif
 \usepackage[T1]{fontenc}
 \renewcommand*\familydefault{\sfdefault}
 
@@ -23,7 +23,7 @@
 %% Navigationssymbole ausblenden
 \setbeamertemplate{navigation symbols}{}
 
-%% Seitenzahl und Gesamtanzahl in FuÃŸleiste
+%% Seitenzahl und Gesamtanzahl in Fußleiste
 
 \setbeamertemplate{footline}[frame number]
 
@@ -54,9 +54,9 @@
 
 \section{Allgemeines}
 
-\subsection{Ãœberblick}
+\subsection{Überblick}
 
-\begin{frame}{Ãœberblick}
+\begin{frame}{Überblick}
   \begin{definition}[Range Minimum Query]
     
     
@@ -84,8 +84,8 @@
 \end{block}
  \pause
  \begin{block}{Idee 2 - mit Preprocessing}
- Preprocessing -- also das Aufbereiten eines zusÃ¤tzlichen Arrays, fÃ¼r mehrere zukÃ¼nftige Queries -- kann zu sublinearen Zugriffszeiten fÃ¼hren.\\
- Erste Idee: Abspeichern der Minima jeder Kombination von Intervallgrenzen in einer 2-dim. Matrix (Ã¡ la Adjazenzmatrix)\\
+ Preprocessing -- also das Aufbereiten eines zusätzlichen Arrays, für mehrere zukünftige Queries -- kann zu sublinearen Zugriffszeiten führen.\\
+ Erste Idee: Abspeichern der Minima jeder Kombination von Intervallgrenzen in einer 2-dim. Matrix (á la Adjazenzmatrix)\\
  $\Rightarrow$ Preprocessingtime: $\Oh(n^3)$, Querytime: $\Oh(1)$
  \end{block}
 
@@ -94,7 +94,7 @@
 
 \begin{frame}[fragile]
 \begin{block}{Idee 3 - mit dynamischer Programmierung}
-Ã„hnliche Idee, allerdings mit dynamischer Programmierung im Preprocessing Schritt.\\
+Ähnliche Idee, allerdings mit dynamischer Programmierung im Preprocessing Schritt.\\
   $\Rightarrow$ Preprocessingtime: $\Oh(n^2)$, Querytime $\Oh(1)$.
 \end{block}
 \vspace{-6mm}
@@ -134,7 +134,7 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\sqrt n)$
 
 \begin{frame}[fragile]
 \begin{block}{Algo mit Sparse Table}
-Algorithmus erstellt eine $n \times \log n$ Matrix in der Teilarrays der LÃ¤nge $2^k$ per dynamischer Programmierung berechnet werden\\[5mm]
+Algorithmus erstellt eine $n \times \log n$ Matrix in der Teilarrays der Länge $2^k$ per dynamischer Programmierung berechnet werden\\[5mm]
 Bild von Array\\[5mm]
 
 Code des dynmischen Programmierungschritts:
@@ -151,8 +151,8 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n\cdot\log n)$, Querytime: $\Oh(1)$
 
 \begin{frame}
 \begin{block}{Segment tree Algo}
-Heap Ã¤hnliche Struktur \\
-erklÃ¤rendes Bild \\
+Heap ähnliche Struktur \\
+erklärendes Bild \\
 $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\log n)$
 \end{block}
 \end{frame}
@@ -164,19 +164,19 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\log n)$
 
 \begin{frame}
 \begin{block}{Skyline}
-Gesucht wird die grÃ¶ÃŸtmÃ¶gliche, zusammenhÃ¤ngende, rechteckige FlÃ¤che innerhalb einer gegebenen Skyline.\\
-Die Skyline besteht aus HÃ¤usern der Breite 1 und gegebener HÃ¶he (Input pro Haus).
+Gesucht wird die größtmögliche, zusammenhängende, rechteckige Fläche innerhalb einer gegebenen Skyline.\\
+Die Skyline besteht aus Häusern der Breite 1 und gegebener Höhe (Input pro Haus).
 \end{block}
 
-erklÃ¤rendes Bild \\[5mm]
+erklärendes Bild \\[5mm]
 \end{frame}
 
-\subsection{LÃ¶sung}
+\subsection{Lösung}
 \begin{frame}
 Beschreibung:\\
 \begin{enumerate}
 \item Suchen des Minimums im aktuellen Intervall.
-\item Berechnen der FlÃ¤che unterhalb dieses Minimums\\ (Minimum * Intervallbreite) und vergleichen mit bisher gefundener maximalen FlÃ¤che.
+\item Berechnen der Fläche unterhalb dieses Minimums\\ (Minimum * Intervallbreite) und vergleichen mit bisher gefundener maximalen Fläche.
 \item Teilen des Intervalls in rechtes und linkes Teilproblem (von diesem Minimum aus gesehen).
 \item In diesen beiden Teilproblemen wieder Schritt 1 anwenden.
 \end{enumerate}
@@ -221,9 +221,9 @@ ggf. rekursiver Algorithmus von Skyline?
 \end{block}
 \pause
 \begin{block}{Idee 1}
-ÃœberprÃ¼fen der aktuellen FlÃ¤che, \\
-denn gegeben war eine maximal HÃ¶he der GebÃ¤ude \\
-$\Rightarrow$ falls aktuelle FlÃ¤che grÃ¶ÃŸer als maximale HÃ¶he, Teilproblem ignorieren
+Überprüfen der aktuellen Fläche, \\
+denn gegeben war eine maximal Höhe der Gebäude \\
+$\Rightarrow$ falls aktuelle Fläche größer als maximale Höhe, Teilproblem ignorieren
 \end{block}
 
 \end{frame}
