@@ -52,11 +52,11 @@
 \tableofcontents[pausesections]
 \end{frame}
 
-\section{Allgemeines}
+\section{Überblick}
 
-\subsection{Überblick}
+\subsection{Definition}
 
-\begin{frame}{Überblick}
+\begin{frame}
   \begin{definition}[Range Minimum Query]
     
     
@@ -64,63 +64,146 @@
     
   \pause
   \only<2->{
+  \vspace{-2mm}
   In Worten:\\
-  Gesucht ist der Index $k$ des kleinsten Elements $A[k]$ in einem gegebenen Bereich ($\ell\leq k\leq r$) innerhalb eines Arrays $A$.}
+  Gesucht ist der Index $k$ des kleinsten Elements $A[k]$ in einem gegebenen Bereich ($\ell\leq k\leq r$) im Array $A$.}
   \end{definition}
+  \vspace{-5mm}
+  \begin{center}
+    \includegraphics<3>[width=0.5\linewidth]{picture/def-array.png}%
+    \includegraphics<4>[width=0.5\linewidth]{picture/def-array-l.png}%
+    \includegraphics<5>[width=0.5\linewidth]{picture/array1.png}%
+    \includegraphics<6>[width=0.5\linewidth]{picture/array5.png}%
+  \end{center}
+  
 \end{frame}
-
-\begin{frame}
-\begin{block}{Beispiel 1}
-  \includegraphics<1>[width=0.5\linewidth]{picture/1}%
-  \includegraphics<2>[width=0.5\linewidth]{picture/2}%
-  \includegraphics<3>[width=0.5\linewidth]{picture/3}%
-\end{block}\end{frame}
 
 \subsection{Naiver Ansatz}
 
 \begin{frame}
-\begin{block}{Idee 1 - trivial}
- Durch das gegebene Array (von $\ell$ bis $r$) durch iterieren und dabei das Minimum merken $\Rightarrow$ Querytime: $\Oh(n)$
+\begin{block}{Naive Idee 1}
+ Von $\ell$ bis $r$ durch das Array iterieren und dabei das Minimum merken.\\
+ $\Rightarrow$ Querytime: $\Oh(n)$
 \end{block}
- \pause
- \begin{block}{Idee 2 - mit Preprocessing}
- Preprocessing -- also das Aufbereiten eines zusätzlichen Arrays, für mehrere zukünftige Queries -- kann zu sublinearen Zugriffszeiten führen.\\
- Erste Idee: Abspeichern der Minima jeder Kombination von Intervallgrenzen in einer 2-dim. Matrix (á la Adjazenzmatrix)\\
- $\Rightarrow$ Preprocessingtime: $\Oh(n^3)$, Querytime: $\Oh(1)$
- \end{block}
+ \begin{center}
+ \includegraphics<1>[width=0.5\textwidth]{picture/array1.png}
+ \includegraphics<2>[width=0.5\textwidth]{picture/array2.png}
+ \includegraphics<3>[width=0.5\textwidth]{picture/array3.png}
+ \includegraphics<4>[width=0.5\textwidth]{picture/array4.png}
+ \includegraphics<5>[width=0.5\textwidth]{picture/array5.png}
+ \end{center}
+\end{frame}
 
+
+\begin{frame}
+ \begin{block}{Naive Idee 2 - mit Preprocessing}
+ Ergebnis jeder Kombination von Intervallgrenzen in einer 2-dim. Matrix M abspeichern.\\[2mm]
+ Beispiel: $M_{ij} = M[\ell][r] = M[3][5] = \alt{\textcolor{red}{5}}{?}<5>$\\[2mm]
+ \end{block}
  
+ \begin{center}
+ \includegraphics<1>[width=0.5\textwidth]{picture/array1.png}
+ \includegraphics<2>[width=0.5\textwidth]{picture/array2.png}
+ \includegraphics<3>[width=0.5\textwidth]{picture/array3.png}
+ \includegraphics<4>[width=0.5\textwidth]{picture/array4.png}
+ \includegraphics<5>[width=0.5\textwidth]{picture/array5.png}
+ \end{center}
+\end{frame}
+
+\begin{frame}
+ Komplette Matrix $M$ nach Preprocessing:
+ \vspace{-5mm}
+\begin{columns}
+\column{.5\textwidth}
+ \begin{center}
+ \includegraphics[width=0.9\textwidth]{picture/array5.png}
+ \end{center}
+\column{.5\textwidth}
+ $$
+ \bordermatrix{
+  &  &  &  &  &  & r &  \cr
+  & 0 & 1 & 1 & 1 & 1 & 1 & 1 \cr
+  &  & 1 & 1 & 1 & 1 & 1 & 1 \cr
+  &  &  & 2 & 2 & 2 & 2 & 6 \cr
+ \ell &  &  &  & 3 & 4 & \fbox{5} & 6 \cr
+  &  &  &  &  & 4 & 5 & 6 \cr
+  &  &  &  &  &  & 5 & 6 \cr
+  &  &  &  &  &  &  & 6 }
+ $$
+\end{columns} 
+\vspace{5mm}
+\begin{block}{Laufzeit}
+ $\Rightarrow$ Preprocessingtime: $\Oh(n^3)$, Querytime: $\Oh(1)$
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Verbesserung mit dynamischer Programmierung}
+\begin{columns}
+\column{.5\textwidth}
+ \begin{center}
+ \includegraphics<1>[width=0.9\textwidth]{picture/dynprog1.png}
+ \includegraphics<2>[width=0.9\textwidth]{picture/dynprog2.png}
+ \includegraphics<3>[width=0.9\textwidth]{picture/dynprog3.png}
+ \includegraphics<4>[width=0.9\textwidth]{picture/dynprog4.png}
+ \includegraphics<5->[width=0.9\textwidth]{picture/dynprog5.png}
+ \end{center}
+\column{.5\textwidth}
+ $$
+ \bordermatrix{
+  &  &  &  &  &  &  & r \cr
+  & 0 & 1 & 1 & 1 & 1 & 1 & 1 \cr
+  &  & 1 & 1 & 1 & 1 & 1 & 1 \cr
+ \ell &  &  & \alt{\fbox{2}}{2}<1> & \only{\alt{\fbox{2}}{2}<2>}<2-> & \only{\alt{\fbox{2}}{2}<3>}<3-> & \only{\alt{\fbox{2}}{2}<4>}<4-> & \only{\alt{\fbox{6}}{6}<5>}<5-> \cr
+  &  &  &  & 3 &  &  &  \cr
+  &  &  &  &  & 4 &  &  \cr
+  &  &  &  &  &  & 5 &  \cr
+  &  &  &  &  &  &  & 6 }
+ $$
+\end{columns} 
+\vspace{1mm}
+\begin{block}<6>{Laufzeit}
+  $\Rightarrow$ Preprocessingtime: $\Oh(n^2)$, Querytime $\Oh(1)$.
+\end{block}
 \end{frame}
 
 \begin{frame}[fragile]
-\begin{block}{Idee 3 - mit dynamischer Programmierung}
-Ähnliche Idee, allerdings mit dynamischer Programmierung im Preprocessing Schritt.\\
-  $\Rightarrow$ Preprocessingtime: $\Oh(n^2)$, Querytime $\Oh(1)$.
+\begin{block}{Pseudo-Code}
+
+\alert<1>{\tt{for (i = 0; i < N; i++)\\}}
+\alert<1>{\tt{\ \ \ \ M[i][i] = i;\\[1.5ex]}}
+
+\only<2->{\alert<2>{\tt{for (i = 0; i < N; i++)\\[1.5ex]}}}
+
+\only<3->{\alert<3>{\tt{\ \ \ \ for (j = i + 1; j < N; j++)\\[1.5ex]}}}
+
+\only<4->{\alert<4>{\tt{\ \ \ \ \ \ \ \ if (A[M[i][j - 1]] < A[j])\\}}}
+\only<4->{\alert<4>{\tt{\ \ \ \ \ \ \ \ \ \ \ \ M[i][j] = M[i][j - 1];\\[1.5ex]}}}
+
+\only<5->{\alert<5>{\tt{\ \ \ \ \ \ \ \ else\\}}}
+\only<5->{\alert<5>{\tt{\ \ \ \ \ \ \ \ \ \ \ \ M[i][j] = j;\\[1.5ex]}}}
+
+\only<5->{\tt{\}\\[1.5ex]}}
 \end{block}
-\vspace{-6mm}
-  \pause
-  \begin{verbatim}
- void trivial3(int M[N][N], int A[N], int N){
-      for (i = 0; i < N; i++)
-          M[i][i] = i;
-      for (i = 0; i < N; i++)
-          for (j = i + 1; j < N; j++)
-              if (A[M[i][j - 1]] < A[j])
-                  M[i][j] = M[i][j - 1];
-              else
-                  M[i][j] = j;
-  }
-  \end{verbatim}
-  \vspace{-5mm}
 \end{frame}
 
+\begin{frame}{Laufzeitübersicht}
+\begin{tabular}{|c|c|c|c|}
+\hline 
+ & Preprocessing & Query & Lohnt sich ab\\
+ & & & $n$ Queries\\ 
+\hline einmalig Suchen & --- & $\Oh(n)$ & --- \\ 
+\hline naives Preprocessing & $\Oh(n^3)$ & $\Oh(1)$ & $n^2$ \\ 
+\hline dyn. Prog. Preprocessing & $\Oh(n^2)$ & $\Oh(1)$ & $n$ \\ 
+\hline 
+\end{tabular} 
+\end{frame}
 
 \section{Effiziente Algorithmen}
-\frame{\sectionpage}
 
 \subsection{Speicheroptimiert}
 
-\begin{frame}[fragile]
+\begin{frame}[fragile]{Effiziente Algorithmen}
 \begin{block}{$\sqrt n$ Teile Algo}
 
 Algorithmus der das Array in $\sqrt n$ Teile teilt und von diesen Teilen jeweils das Minimum speichert.\\[5mm]
@@ -155,6 +238,22 @@ Heap ähnliche Struktur \\
 erklärendes Bild \\
 $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\log n)$
 \end{block}
+\end{frame}
+
+\begin{frame}{Laufzeitübersicht}
+\begin{tabular}{|c||c|c|c|}
+\hline 
+ & Preprocessing & Query & Lohnt sich ab\\
+ & & & $n$ Queries\\ 
+\hline einmalig Suchen & --- & $\Oh(n)$ & --- \\ 
+\hline naives Preprocessing & $\Oh(n^3)$ & $\Oh(1)$ & $n^2$ \\ 
+\hline dyn. Prog. Preprocessing & $\Oh(n^2)$ & $\Oh(1)$ & $n$ \\ 
+\hline
+\hline $\sqrt{n}$-Teile & $\Oh(n)$ & $\Oh(\sqrt{n})$ & $?$ \\ 
+\hline Sparse Table & $\Oh(n \cdot \log n)$ & $\Oh(1)$ & $ \log{n}$ \\ 
+\hline Segment Tree & $\Oh(n)$ & $\Oh(\log{n})$ & $ ? $ \\ 
+\hline 
+\end{tabular} 
 \end{frame}
 
 \section{Problemset}
@@ -541,7 +640,8 @@ Algorithmus Endergebnis:\\
 \only<3->{\alert<3>{\tt{\ \ \ \ if ( area > max ) max = area;\\[1.5ex]}}}
 
 \only<4->{\alert<4>{\tt{\ \ \ \ Q.add( Intervall(left, min - 1) );\\}}}
-\only<4->{\alert<4>{\tt{\ \ \ \ Q.add( Intervall(min + 1, right) );}}}
+\only<4->{\alert<4>{\tt{\ \ \ \ Q.add( Intervall(min + 1, right) );\\}}}
+\only<4->{\tt{\}}}
 \end{block}
 \column{.3\textwidth}
 \begin{center}
