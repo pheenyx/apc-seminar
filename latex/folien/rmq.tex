@@ -23,8 +23,10 @@
 %% Navigationssymbole ausblenden
 \setbeamertemplate{navigation symbols}{}
 
-%% Seitenzahl und Gesamtanzahl in Fußleiste
+%% 2 spalten in TOC
+\usepackage{multicol}
 
+%% Seitenzahl und Gesamtanzahl in Fußleiste
 \setbeamertemplate{footline}[frame number]
 
 %% Metadaten des Dokuments
@@ -47,9 +49,11 @@
   \titlepage
 \end{frame}
 
-
-\begin{frame}{Inhaltsverzeichnis}
+\begin{frame}
+\frametitle{Inhaltsverzeichnis}
+\begin{multicols}{2}
 \tableofcontents[pausesections]
+\end{multicols}
 \end{frame}
 
 \section{Überblick}
@@ -57,25 +61,24 @@
 \subsection{Definition}
 
 \begin{frame}
+\begin{center}
+    \includegraphics<1>[width=0.5\linewidth]{picture/def-array.png}%
+    \includegraphics<2>[width=0.5\linewidth]{picture/def-array-l.png}%
+    \includegraphics<3>[width=0.5\linewidth]{picture/array1.png}%
+    \includegraphics<4->[width=0.5\linewidth]{picture/array5.png}%
+  \end{center}
+  \pause[5]
   \begin{definition}[Range Minimum Query]
     
     
     \[\text{RMQ}_{A}(\ell,r) = \text{arg} \ \min_{\ell \leq k \leq r } A[k] \]
     
   \pause
-  \only<2->{
+  \only<6->{
   \vspace{-2mm}
   In Worten:\\
   Gesucht ist der Index $k$ des kleinsten Elements $A[k]$ in einem gegebenen Bereich ($\ell\leq k\leq r$) im Array $A$.}
   \end{definition}
-  \vspace{-5mm}
-  \begin{center}
-    \includegraphics<3>[width=0.5\linewidth]{picture/def-array.png}%
-    \includegraphics<4>[width=0.5\linewidth]{picture/def-array-l.png}%
-    \includegraphics<5>[width=0.5\linewidth]{picture/array1.png}%
-    \includegraphics<6>[width=0.5\linewidth]{picture/array5.png}%
-  \end{center}
-  
 \end{frame}
 
 \subsection{Naiver Ansatz}
@@ -97,7 +100,7 @@
 
 \begin{frame}
  \begin{block}{Naive Idee 2 - mit Preprocessing}
- Ergebnis jeder Kombination von Intervallgrenzen in einer 2-dim. Matrix M abspeichern.\\[2mm]
+ Ergebnis jeder Kombination von Intervallgrenzen in einer $n\times n$ Matrix $M$ abspeichern.\\[2mm]
  Beispiel: $M_{ij} = M[\ell][r] = M[3][5] = \alt{\textcolor{red}{5}}{?}<5>$\\[2mm]
  \end{block}
  
@@ -132,7 +135,7 @@
  $$
 \end{columns} 
 \vspace{5mm}
-\begin{block}{Laufzeit}
+\begin{block}<2>{Laufzeit}
  $\Rightarrow$ Preprocessingtime: $\Oh(n^3)$, Querytime: $\Oh(1)$
 \end{block}
 
@@ -249,15 +252,20 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\log n)$
 \hline naives Preprocessing & $\Oh(n^3)$ & $\Oh(1)$ & $n^2$ \\ 
 \hline dyn. Prog. Preprocessing & $\Oh(n^2)$ & $\Oh(1)$ & $n$ \\ 
 \hline
-\hline $\sqrt{n}$-Teile & $\Oh(n)$ & $\Oh(\sqrt{n})$ & $?$ \\ 
+\hline $\sqrt{n}$-Teile & $\Oh(n)$ & $\Oh(\sqrt{n})$ & $\frac{\sqrt{n}}{\sqrt{n} - 1}$ \\ 
 \hline Sparse Table & $\Oh(n \cdot \log n)$ & $\Oh(1)$ & $ \log{n}$ \\ 
-\hline Segment Tree & $\Oh(n)$ & $\Oh(\log{n})$ & $ ? $ \\ 
+\hline Segment Tree & $\Oh(n)$ & $\Oh(\log{n})$ & $ \frac{n}{n-\log{n}} $ \\ 
 \hline 
 \end{tabular} 
 \end{frame}
 
-\section{Problemset}
-\frame{\sectionpage}
+\section{Problem: Skyline}
+
+\begin{frame}{Problem: Skyline}
+\begin{center}
+\includegraphics[width=\textwidth]{picture/skyline-yyz.png}
+\end{center}
+\end{frame}
 
 \subsection{Beschreibung}
 
@@ -653,18 +661,17 @@ Algorithmus Endergebnis:\\
 \end{columns}
 \end{frame}
 
-\begin{frame}
-ggf. rekursiver Algorithmus von Skyline?
+\begin{frame}{Mission accomplished!}
+\begin{center}
+\includegraphics[height=0.7\textheight]{picture/skyline-runs.png}
+\end{center}
 \end{frame}
+
 
 \subsection{Optimierung}
 
 \begin{frame}
-\begin{block}{Idee 0}
- Queue anstatt ArrayList
-\end{block}
-\pause
-\begin{block}{Idee 1}
+\begin{block}{Einzelgebäude}
 Überprüfen der aktuellen Fläche, \\
 denn gegeben war eine maximal Höhe der Gebäude \\
 $\Rightarrow$ falls aktuelle Fläche größer als maximale Höhe, Teilproblem ignorieren
@@ -674,7 +681,7 @@ $\Rightarrow$ falls aktuelle Fläche größer als maximale Höhe, Teilproblem ignori
 
 \begin{frame}
 
-\begin{block}{Idee 2}
+\begin{block}{Parallelisierung}
 Nutzen von CUDA oder OpenCL um 'Sparse Table' in $\Oh(n)$ zu berechnen.
 
 \includegraphics[width=0.2\linewidth]{picture/cuda_opencl_logos} 
@@ -692,6 +699,9 @@ Nutzen von CUDA oder OpenCL um 'Sparse Table' in $\Oh(n)$ zu berechnen.
 \end{frame}
 
 \begin{frame}
+ \begin{block}{Vielen Dank}
+ Vielen Dank für die Aufmerksamkeit
+ \end{block}
  \begin{block}{Quellen}
    \url{http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor}\\
    \url{http://wcipeg.com/wiki/RMQ}\\
