@@ -237,7 +237,7 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\sqrt n)$
 \includegraphics<6>[width=1.0\textwidth]{picture/sparse/Folie6.JPG}
 \includegraphics<7>[width=1.0\textwidth]{picture/sparse/Folie7.JPG}
 \includegraphics<8>[width=1.0\textwidth]{picture/sparse/Folie8.JPG}
-\includegraphics<9>[width=1.0\textwidth]{picture/sparse/Folie9.JPG}
+\includegraphics<9>[width=1.0\textwidth]{picture/sparse/sparse.jpg}
 \includegraphics<10>[width=1.0\textwidth]{picture/sparse/Folie10.JPG}
 \includegraphics<11>[width=1.0\textwidth]{picture/sparse/Folie11.JPG}
 \includegraphics<12>[width=1.0\textwidth]{picture/sparse/Folie12.JPG}
@@ -249,9 +249,13 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\sqrt n)$
 
 \begin{frame}[fragile]
 \begin{block}{Sparse Table}
-Algorithmus erstellt eine $n \times \log n$ Matrix in der Teilarrays der Länge $2^k$ per dynamischer Programmierung berechnet werden\\[5mm]
-Bild von Array\\[5mm]
-
+Algorithmus erstellt eine $n \times \log n$ Matrix in der Teilarrays der Länge $2^k$ per dynamischer Programmierung berechnet werden
+\end{block}
+\vspace{-6mm}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{picture/sparse/Folie2.JPG}
+\end{center}
+\vspace{-2cm}
 Code des dynmischen Programmierungschritts:
 \vspace{-5mm}
 \begin{verbatim}
@@ -261,7 +265,7 @@ else
     M[i][j] = M[i + (1 << (j - 1))][j - 1];
 \end{verbatim}
 $\Rightarrow$ Preprocessingtime: $\Oh(n\cdot\log n)$, Querytime: $\Oh(1)$
-\end{block}
+
 \end{frame}
 
 
@@ -273,7 +277,7 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n\cdot\log n)$, Querytime: $\Oh(1)$
 \hline 
  & Preprocessing & Query & Lohnt sich ab & Laufzeit bei\\
  & & & $n$ Queries & $m$ Queries \\ 
-\hline einmalig Suchen & --- & $\Oh(n)$ & --- & $m*n$ \\ 
+\hline einmalig Suchen & --- & $\Oh(n)$ & --- & $m\cdot n$ \\ 
 \hline naives Preprocessing & $\Oh(n^3)$ & $\Oh(1)$ & $n^2$ & $n^3+m$\\ 
 \hline dyn. programmiertes & & & & \\ Preprocessing & $\Oh(n^2)$ & $\Oh(1)$ & $n$ & $n^2+m$\\ 
 \hline
@@ -707,7 +711,7 @@ $\Rightarrow$ falls aktuelle Fläche größer als maximale Höhe, Teilproblem ignori
 
 \begin{frame}
 \includegraphics<1>[width=1.0\textwidth]{picture/optimierung/Folie1.JPG}
-\includegraphics<1>[width=1.0\textwidth]{picture/optimierung/Folie2.JPG}
+\includegraphics<2>[width=1.0\textwidth]{picture/optimierung/Folie2.JPG}
 \end{frame}
 
 \begin{frame}
@@ -724,9 +728,31 @@ Nutzen von CUDA oder OpenCL um 'Sparse Table' in $\Oh(\log n)$ zu berechnen.
 \includegraphics<2>[width=1.0\textwidth]{picture/cuda/Folie2.JPG}
 \end{frame}
 
+\begin{frame}{Laufzeitübersicht}
+\noindent\hspace*{-1,0cm}
+\small
+\begin{tabular}{|c||c|c|c|c|}
+
+\hline 
+ & Preprocessing & Query & Lohnt sich ab & Laufzeit bei\\
+ & & & $n$ Queries & $m$ Queries \\ 
+\hline einmalig Suchen & --- & $\Oh(n)$ & --- & $m\cdot n$ \\ 
+\hline naives Preprocessing & $\Oh(n^3)$ & $\Oh(1)$ & $n^2$ & $n^3+m$\\ 
+\hline dyn. programmiertes & & & & \\ Preprocessing & $\Oh(n^2)$ & $\Oh(1)$ & $n$ & $n^2+m$\\ 
+\hline
+\hline $\sqrt{n}$-Teile & $\Oh(n)$ & $\Oh(\sqrt{n})$ & $\frac{\sqrt{n}}{\sqrt{n} - 1}$ & $n+\sqrt{n}\cdot m$\\ 
+\hline Sparse Table & $\Oh(n \cdot \log n)$ & $\Oh(1)$ & $ \log{n}$ & $n\cdot \log n + m$\\ 
+\hline Sparse Table parallel & $\Oh(\log n)$ & $\Oh(1)$ & $ \frac{\log{n}}{n}$ & $\log n + m$\\ 
+\hline Segment Tree & $\Oh(n)$ & $\Oh(\log{n})$ & $ \frac{n}{n-\log{n}} $ & $n +(\log n)\cdot m$\\ 
+\hline 
+
+\end{tabular} 
+\normalsize
+\end{frame}
+
 \begin{frame}
- \begin{block}{Vielen Dank}
- Vielen Dank für die Aufmerksamkeit
+ \begin{block}{Vielen Dank...}
+ ... für die Aufmerksamkeit
  \end{block}
  \begin{block}{Quellen}
    \url{http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor}\\
