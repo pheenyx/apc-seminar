@@ -190,36 +190,65 @@
 \end{block}
 \end{frame}
 
+
 \begin{frame}{Laufzeitübersicht}
-\begin{tabular}{|c|c|c|c|}
+ \noindent\hspace*{-1,0cm}
+\begin{tabular}{|c|c|c|c|c|}
+
 \hline 
- & Preprocessing & Query & Lohnt sich ab\\
- & & & $n$ Queries\\ 
-\hline einmalig Suchen & --- & $\Oh(n)$ & --- \\ 
-\hline naives Preprocessing & $\Oh(n^3)$ & $\Oh(1)$ & $n^2$ \\ 
-\hline dyn. Prog. Preprocessing & $\Oh(n^2)$ & $\Oh(1)$ & $n$ \\ 
+ & Preprocessing & Query & Lohnt sich ab & Laufzeit bei\\
+ & & & $n$ Queries & $m$ Queries \\ 
+\hline einmalig Suchen & --- & $\Oh(n)$ & --- & $n\cdot m$\\ 
+\hline naives Preprocessing & $\Oh(n^3)$ & $\Oh(1)$ & $n^2$ & $n^3+m$\\ 
+\hline dyn. programmiertes & & & & \\ Preprocessing & $\Oh(n^2)$ & $\Oh(1)$ & $n$ & $n^2+m$ \\ 
 \hline 
 \end{tabular} 
 \end{frame}
 
 \section{Effiziente Algorithmen}
 
-\subsection{Speicheroptimiert}
+\subsection{$\sqrt n $ Teile Algorithmus}
 
-\begin{frame}[fragile]{Effiziente Algorithmen}
-\begin{block}{$\sqrt n$ Teile Algo}
+\begin{frame}[fragile]{$\sqrt n$ Teile Algorithmus}
 
-Algorithmus der das Array in $\sqrt n$ Teile teilt und von diesen Teilen jeweils das Minimum speichert.\\[5mm]
-Bild\\[5mm]
+\includegraphics<1>[width=0.9\textwidth]{picture/sqrt_0.png}
+\includegraphics<2>[width=0.9\textwidth]{picture/sqrt_1.png}
+\includegraphics<3>[width=0.9\textwidth]{picture/sqrt_2.png}
+\includegraphics<4>[width=0.9\textwidth]{picture/sqrt_3.png}
+\includegraphics<5->[width=0.9\textwidth]{picture/sqrt_4.png}
+
+\end{frame}
+
+\begin{frame}[fragile]{$\sqrt n$ Teile Algorithmus}
+\begin{block}{$\sqrt n$ Teile Algorithmus}
+ Array wird in $\sqrt n$ Teile zerlegt und von diesen Teilen wird jeweils das Minimum speichert.\\
 $\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\sqrt n)$
 \end{block}
 \end{frame}
 
+\subsection{Sparse Table}
 
-\subsection{Zugriffsoptimiert}
+\begin{frame}
+\includegraphics<1>[width=1.0\textwidth]{picture/sparse/Folie1.JPG}
+\includegraphics<2>[width=1.0\textwidth]{picture/sparse/Folie2.JPG}
+\includegraphics<3>[width=1.0\textwidth]{picture/sparse/Folie3.JPG}
+\includegraphics<4>[width=1.0\textwidth]{picture/sparse/Folie4.JPG}
+\includegraphics<5>[width=1.0\textwidth]{picture/sparse/Folie5.JPG}
+\includegraphics<6>[width=1.0\textwidth]{picture/sparse/Folie6.JPG}
+\includegraphics<7>[width=1.0\textwidth]{picture/sparse/Folie7.JPG}
+\includegraphics<8>[width=1.0\textwidth]{picture/sparse/Folie8.JPG}
+\includegraphics<9>[width=1.0\textwidth]{picture/sparse/Folie9.JPG}
+\includegraphics<10>[width=1.0\textwidth]{picture/sparse/Folie10.JPG}
+\includegraphics<11>[width=1.0\textwidth]{picture/sparse/Folie11.JPG}
+\includegraphics<12>[width=1.0\textwidth]{picture/sparse/Folie12.JPG}
+\includegraphics<13>[width=1.0\textwidth]{picture/sparse/Folie13.JPG}
+\includegraphics<14>[width=1.0\textwidth]{picture/sparse/Folie14.JPG}
+\includegraphics<15>[width=1.0\textwidth]{picture/sparse/Folie15.JPG}
+\includegraphics<16>[width=1.0\textwidth]{picture/sparse/Folie16.JPG}
+\end{frame}
 
 \begin{frame}[fragile]
-\begin{block}{Algo mit Sparse Table}
+\begin{block}{Sparse Table}
 Algorithmus erstellt eine $n \times \log n$ Matrix in der Teilarrays der Länge $2^k$ per dynamischer Programmierung berechnet werden\\[5mm]
 Bild von Array\\[5mm]
 
@@ -235,28 +264,26 @@ $\Rightarrow$ Preprocessingtime: $\Oh(n\cdot\log n)$, Querytime: $\Oh(1)$
 \end{block}
 \end{frame}
 
-\begin{frame}
-\begin{block}{Segment tree Algo}
-Heap ähnliche Struktur \\
-erklärendes Bild \\
-$\Rightarrow$ Preprocessingtime: $\Oh(n)$, Querytime: $\Oh(\log n)$
-\end{block}
-\end{frame}
 
 \begin{frame}{Laufzeitübersicht}
-\begin{tabular}{|c||c|c|c|}
+\noindent\hspace*{-1,05cm}
+\small
+\begin{tabular}{|c||c|c|c|c|}
+
 \hline 
- & Preprocessing & Query & Lohnt sich ab\\
- & & & $n$ Queries\\ 
-\hline einmalig Suchen & --- & $\Oh(n)$ & --- \\ 
-\hline naives Preprocessing & $\Oh(n^3)$ & $\Oh(1)$ & $n^2$ \\ 
-\hline dyn. Prog. Preprocessing & $\Oh(n^2)$ & $\Oh(1)$ & $n$ \\ 
+ & Preprocessing & Query & Lohnt sich ab & Laufzeit bei\\
+ & & & $n$ Queries & $m$ Queries \\ 
+\hline einmalig Suchen & --- & $\Oh(n)$ & --- & $m*n$ \\ 
+\hline naives Preprocessing & $\Oh(n^3)$ & $\Oh(1)$ & $n^2$ & $n^3+m$\\ 
+\hline dyn. programmiertes & & & & \\ Preprocessing & $\Oh(n^2)$ & $\Oh(1)$ & $n$ & $n^2+m$\\ 
 \hline
-\hline $\sqrt{n}$-Teile & $\Oh(n)$ & $\Oh(\sqrt{n})$ & $\frac{\sqrt{n}}{\sqrt{n} - 1}$ \\ 
-\hline Sparse Table & $\Oh(n \cdot \log n)$ & $\Oh(1)$ & $ \log{n}$ \\ 
-\hline Segment Tree & $\Oh(n)$ & $\Oh(\log{n})$ & $ \frac{n}{n-\log{n}} $ \\ 
+\hline $\sqrt{n}$-Teile & $\Oh(n)$ & $\Oh(\sqrt{n})$ & $\frac{\sqrt{n}}{\sqrt{n} - 1}$ & $n+\sqrt{n}\cdot m$\\ 
+\hline Sparse Table & $\Oh(n \cdot \log n)$ & $\Oh(1)$ & $ \log{n}$ & $n\cdot \log n + m$\\ 
+\hline Segment Tree & $\Oh(n)$ & $\Oh(\log{n})$ & $ \frac{n}{n-\log{n}} $ & $n +(\log n)\cdot m$\\ 
 \hline 
+
 \end{tabular} 
+\normalsize
 \end{frame}
 
 \section{Problem: Skyline}
@@ -676,26 +703,25 @@ Algorithmus Endergebnis:\\
 denn gegeben war eine maximal Höhe der Gebäude \\
 $\Rightarrow$ falls aktuelle Fläche größer als maximale Höhe, Teilproblem ignorieren
 \end{block}
-
 \end{frame}
 
 \begin{frame}
+\includegraphics<1>[width=1.0\textwidth]{picture/optimierung/Folie1.JPG}
+\includegraphics<1>[width=1.0\textwidth]{picture/optimierung/Folie2.JPG}
+\end{frame}
 
+\begin{frame}
 \begin{block}{Parallelisierung}
-Nutzen von CUDA oder OpenCL um 'Sparse Table' in $\Oh(n)$ zu berechnen.
+Nutzen von CUDA oder OpenCL um 'Sparse Table' in $\Oh(\log n)$ zu berechnen.
 
 \includegraphics[width=0.2\linewidth]{picture/cuda_opencl_logos} 
 
 \end{block} 
-
 \end{frame}
 
-\subsection{Anwendungen}
 \begin{frame}
-\begin{itemize}
-	\item Lowest Common Ancestor (letzter gemeinsamer Vorfahre)
-	\item String matching
-\end{itemize}
+\includegraphics<1>[width=1.0\textwidth]{picture/cuda/Folie1.JPG}
+\includegraphics<2>[width=1.0\textwidth]{picture/cuda/Folie2.JPG}
 \end{frame}
 
 \begin{frame}
@@ -706,6 +732,7 @@ Nutzen von CUDA oder OpenCL um 'Sparse Table' in $\Oh(n)$ zu berechnen.
    \url{http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lowestCommonAncestor}\\
    \url{http://wcipeg.com/wiki/RMQ}\\
    \url{http://www.indigorenderer.com/sites/default/files/cuda_opencl_logos.png}
+   \url{http://www.channelprosmb.com/images/main_article_images/tesla-k20-series.jpg}
  \end{block}
 \end{frame}
 
