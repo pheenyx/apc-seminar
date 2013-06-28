@@ -1,0 +1,46 @@
+\chapter[RMQ]{Range Minimum Query}
+\writer{Felix Lauenroth \& Michael Mardaus}
+
+\section{Einleitung}
+
+Im Folgenden beschäftigen wir uns mit dem $Range Minimum Query (RMQ)$ Algroithmus und dem Skyline Problem. In Kapitel 1 behandeln wir den $RMQ$ und Kapitel 2 handelt vom Skyline Problem. Kommen wir zunächst zur Definition der $ RMQ $. Gesucht wird die Indexposition des kleinsten Wertes innerhalb einem gegebenem Intervall [l, r] oder mathematisch Ausgedrückt:
+
+\[\text{RMQ}_{A}(\ell,r) = \text{arg} \ \min_{\ell \leq k \leq r } A[k] \]
+
+\section{Naive Ansätze}
+\subsection{Durch iterieren}
+
+Zunächst beschreiben wir eine auf den ersten Blick einfach aussehende Methode. Wir iterieren sequenziell durch das gegebene Intervall und speichern dabei die Indexposition des Minimums. Dies schaffen wir offensichtlich in $\Oh(n)$ \footnote{\label{foot:1} $n$ beschreibt die Länge des Intervalls}. Wie auf den ersten Blick erkennbar ist variiert die Laufzeit mit der Länge des gegebenen Intervalls. Auch bei mehrfach Ausführung der Abfrage verschlechtert sich die Laufzeit um den erheblichen Faktor $m$\footnote{\label{foot:2} $m$ beschreibt die Anzahl der Abfragen}, welches zu einer Laufzeit von $\Oh(n\cdot m)$ bei $m$ Abfragen führt. Doch diese Methode hat einen erheblichen Vorteil. Sie funktioniert in-place, das heißt sie benötigt nur eine konstante Menge an Speicher. Denn das durch-iterieren findet in der Eingabeliste statt und ansonsten wird nur Speicherplatz für die Indexposition benötigt.
+
+\subsection{Preprocessing}
+
+Kommen wir nun zur Anschauung des Preprocessings. Hierbei erstellt man sich zunächst eine $n\times n$ Matrix $M$, in der man alle Kombinationsmöglichkeiten des Intervalls vorberechnet.
+
+\subsection{Preprocessing mit dynamischer Programmierung}
+
+\section{Effiziente Algorithmen}
+\subsection{$\sqrt n $ Teile Algorithmus}
+
+\subsection{Sparse Table}
+Als nächstes erörtern wir den Sparse Table Algorithmus ($STA$) welcher auf Preprocessing zurück greift. Der $STA$ besteht im Wesentlichen aus zwei Phasen. In Phase 1 wird zunächst die Zweierpotenz errechnet, welche mindestens die Hälfte der Eingabeliste überdeckt. Denn Exponenten\footnote{\label{sparse:1}zur Basis 2} dieser Zweierpotenz nennen wir im Folgenden $n$. Nun wird ein Matrix $A[][]$ mit $pos$ Spalten und $n$ Zeilen angelegt. Der Zeilenindex entspricht hierbei dem Exponenten einer Zweierpotenz\footnote{\label{sparse:2} 
+\begin{tabular}{l}
+$A[0][0]\equiv 2^0$ \\ 
+$A[0][1]\equiv 2^1$ \\
+\end{tabular}
+}. Anschließend wird 
+Anhand 
+
+die Indexposition des Minimus, der entsprechenden Länge, in der Matrix $A[][]$ gespeichert (Abb. \ref{sparse_1}).
+\begin{figure}[h]
+\includegraphics[width=7cm]{picture/sparse_1.png}
+\caption{Phase 1}
+\label{sparse_1}
+\end{figure}
+Dies geschieht für jeden Eintrag der Liste. 
+Nachdem Phase 1 beendet ist, habe wir das Preprocessing  
+
+\chapter{Skyline}
+
+\section{Problemstellung}
+
+\section{Anhang}
