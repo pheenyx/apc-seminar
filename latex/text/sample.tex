@@ -3,18 +3,20 @@
 
 \section{Einleitung}
 
-Im Folgenden beschäftigen wir uns mit dem $Range Minimum Query (RMQ)$ Algroithmus und dem Skyline Problem. In Kapitel 1 behandeln wir den $RMQ$ und Kapitel 2 handelt vom Skyline Problem. Kommen wir zunächst zur Definition der $ RMQ $. Gesucht wird die Indexposition des kleinsten Wertes innerhalb einem gegebenem Intervall [l, r] oder mathematisch Ausgedrückt:
+Im Folgenden beschäftigen wir uns mit dem $Range~ Minimum~  Query~ (RMQ)$ Algroithmus und dem Skyline Problem. In Kapitel 1 erörtern wir zunächst den $RMQ$ und zeigen verschiedene Implementationen. Kapitel 2 behandelt das Skyline Problem und zeigt unsere Umsetzung.
+
+\section{Definition}
+
+ Kommen wir zunächst zur Definition der $ RMQ $. Als Eingabe wird ein Array genutzt, innerhalb welchem wird die Indexposition des kleinsten Wertes eines gegebenen Intervall's [l, r] suchen oder mathematisch Ausgedrückt:
 
 \[\text{RMQ}_{A}(\ell,r) = \text{arg} \ \min_{\ell \leq k \leq r } A[k] \]
 
 \section{Naive Ansätze}
 \subsection{Durch iterieren}
 
-Zunächst beschreiben wir eine auf den ersten Blick einfach aussehende Methode. Wir iterieren sequenziell durch das gegebene Intervall und speichern dabei die Indexposition des Minimums. Dies schaffen wir offensichtlich in $\Oh(n)$ \footnote{\label{foot:1} $n$ beschreibt die Länge des Intervalls}. Wie auf den ersten Blick erkennbar ist variiert die Laufzeit mit der Länge des gegebenen Intervalls. Auch bei mehrfach Ausführung der Abfrage verschlechtert sich die Laufzeit um den erheblichen Faktor $m$\footnote{\label{foot:2} $m$ beschreibt die Anzahl der Abfragen}, welches zu einer Laufzeit von $\Oh(n\cdot m)$ bei $m$ Abfragen führt. Doch diese Methode hat einen erheblichen Vorteil. Sie funktioniert in-place, das heißt sie benötigt nur eine konstante Menge an Speicher. Denn das durch-iterieren findet in der Eingabeliste statt und ansonsten wird nur Speicherplatz für die Indexposition benötigt.
+Zunächst beschreiben wir eine auf den ersten Blick einfach aussehende Methode. Wir iterieren sequenziell durch das gegebene Intervall und speichern dabei die Indexposition des Minimums. Dies schaffen wir offensichtlich in $\Oh(n)$ \footnote{\label{foot:1} $n$ beschreibt die Länge des Intervalls}. Wie auf den ersten Blick erkennbar ist variiert die Laufzeit mit der Länge des gegebenen Intervalls. Auch bei mehrfach Ausführung der Abfrage verschlechtert sich die Laufzeit um den erheblichen Faktor $m$\footnote{\label{foot:2} $m$ beschreibt die Anzahl der Abfragen}, welches zu einer Laufzeit von $\Oh(n\cdot m)$ bei $m$ Abfragen führt. Doch diese Methode hat auch einen erheblichen Vorteil. Sie funktioniert in-place, das heißt sie benötigt nur eine konstante Menge an Speicher. Denn das durch-iterieren findet in der Eingabeliste statt und ansonsten wird nur Speicherplatz für die Indexposition benötigt.
 
 \subsection{Preprocessing}
-
-Kommen wir nun zur Anschauung des Preprocessings. Hierbei erstellt man sich zunächst eine $n\times n$ Matrix $M$, in der man alle Kombinationsmöglichkeiten des Intervalls vorberechnet.
 
 \subsection{Preprocessing mit dynamischer Programmierung}
 
@@ -22,22 +24,40 @@ Kommen wir nun zur Anschauung des Preprocessings. Hierbei erstellt man sich zunä
 \subsection{$\sqrt n $ Teile Algorithmus}
 
 \subsection{Sparse Table}
-Als nächstes erörtern wir den Sparse Table Algorithmus ($STA$) welcher auf Preprocessing zurück greift. Der $STA$ besteht im Wesentlichen aus zwei Phasen. In Phase 1 wird zunächst die Zweierpotenz errechnet, welche mindestens die Hälfte der Eingabeliste überdeckt. Denn Exponenten\footnote{\label{sparse:1}zur Basis 2} dieser Zweierpotenz nennen wir im Folgenden $n$. Nun wird ein Matrix $A[][]$ mit $pos$ Spalten und $n$ Zeilen angelegt. Der Zeilenindex entspricht hierbei dem Exponenten einer Zweierpotenz\footnote{\label{sparse:2} 
-\begin{tabular}{l}
-$A[0][0]\equiv 2^0$ \\ 
-$A[0][1]\equiv 2^1$ \\
-\end{tabular}
-}. Anschließend wird 
-Anhand 
-
-die Indexposition des Minimus, der entsprechenden Länge, in der Matrix $A[][]$ gespeichert (Abb. \ref{sparse_1}).
+Als nächstes erörtern wir den Sparse Table Algorithmus ($STA$). Der $STA$ besteht im Wesentlichen aus zwei Phasen. In Phase 1 wird zunächst eine Matrix $A$ mit $n$ Zeilen und $\lfloor \log n \rfloor +1$ Spalten erstellt. Der ein oder andere Leser wird sich jetzt fragen, wieso brauchen wir nur $\lfloor \log n \rfloor +1$ Spalten? Dies lässt sich am besten anhand eines Beispiels zeigen. Angenommen wir haben folgendes Eingabearray (Abb. \ref{sparse_0}) .
 \begin{figure}[h]
-\includegraphics[width=7cm]{picture/sparse_1.png}
-\caption{Phase 1}
-\label{sparse_1}
+\includegraphics[width=6cm]{picture/sparse_0.png}
+\caption{Eingabearray}
+\label{sparse_0}
 \end{figure}
-Dies geschieht für jeden Eintrag der Liste. 
-Nachdem Phase 1 beendet ist, habe wir das Preprocessing  
+Zunächst benötigen wir die Zweierpotenz, welche mindestens die Hälfte des Arrays überdeckt. In unserem Beispiel ist es die 8. Jetzt kommen wir zu dem Trick, und zwar benutzen wir nun die Tatsache das wenn wir zweimal diese Zweierpotenz benutzen, wir das Array komplett überdecken können (Abb. \ref{sparse_01}).
+\begin{figure}[h]
+\includegraphics[width=6cm]{picture/sparse_01.png}
+\caption{Überdeckung}
+\label{sparse_01}
+\end{figure}
+Dadurch können wir das Minimum des Arrays ermitteln, indem wir jeweils das Minimum der beiden Zweierpotenzen bestimmen und davon einfach den kleineren Wert benutzen.
+Diesen Trick benutzen wir nun um unsere Matrix $A$ aufzubauen. Im Wesentlich baut sich $A$ folgendermaßen auf. Jede Zeile steht für die entsprechende Position im Array und die Spalten entsprechen einer Zweierpotenz (Abb. \ref{sparse_02} und \ref{sparse_03}).
+\begin{figure}[h]
+\includegraphics[width=10cm]{picture/sparse_02.png}
+\caption{Erste Zeile Matrix $A$}
+\label{sparse_02}
+\end{figure}
+\begin{figure}[h]
+\includegraphics[width=10cm]{picture/sparse_03.png}
+\caption{Zweite Zeile Matrix $A$}
+\label{sparse_03}
+\end{figure}
+Dies führen wir für jede Position im Array durch. Nun haben wir unseren 'Sparse Table'\footnote{\label{sparse:1} sparse, da unsere Matrix $A$ nur $\lfloor \log n \rfloor +1$ Spalten besitzt, und nicht $n$ Spalten} erstellt und haben damit Phase 1 abgeschlossen. Anzumerken ist noch das die Initialisierung der Matrix $A$ durch dynamische Programmierung optimiert werden kann. Dazu wird beim Berechnen der Zeilen nicht für jede Spalte das Array komplett durchlaufen, sondern nur noch der Teil des Array der noch nicht besucht wurde.
+Kommen wir nun zur Phase 2. Hierbei benutzen wir nun das Intervall innerhalb unseres Arrays in welchem wir das Minimum suchen. Dazu gehen wir wie folgt vor, zunächst suchen wir die Zweierpotenz welche mindestens die Hälfte des Intervalls überdeckt. Auch hier werden wir das Ganze durch ein einfaches Beispiel erläutern.
+Zunächst sei unser Intervall zwischen Index 1 und 9 gegeben. Das heißt unsere Zweierpotenz ist hier 8. Nun brauchen wir nur noch in den beiden entsprechenden Zeile unserer Matrix $A$ an Position 3\footnote{\label{sparse:2} da $2^3$ = 8} (Abb. \ref{sparse_04}).
+\begin{figure}[h]
+\includegraphics[width=10cm]{picture/sparse_04.png}
+\caption{Abfrage}
+\label{sparse_04}
+\end{figure}
+nachsehen und von den beiden Positionen das Minimum zu bestimmen. \\
+Kommen wir nun zur Laufzeit Analyse. Offensichtlich benötigen wir für Phase 1 $\Oh(n \cdot \log n )$ um unsere Matrix $A$ zu berechnen. Für eine Minimumbestimmung hingegen benötigen wir nur zwei Abfragen unserer Matrix $A$ welches wir in $\Oh 1$ schaffen. Daraus ergibt sich eine Laufzeit bei $m$ Abfragen von $\Oh (n \cdot \log n \cdot m)$.
 
 \chapter{Skyline}
 
