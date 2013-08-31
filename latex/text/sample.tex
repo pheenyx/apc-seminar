@@ -31,7 +31,7 @@ Wie auf den ersten Blick erkennbar ist, variiert die Laufzeit mit der Länge des 
 
 \subsection{Preprocessing}
 
-Für wiederholte Abfragen auf das gleiche Eingabearray suchen wir nun Mechanismen, wie wir durch Vorausberechnen (dem sogenannten Preprocessing) zukünftige Abfragen mit verschiedenen Intervallgrenzen auf das gleichen Eingabearray beschleunigen können.
+Für wiederholte Abfragen auf das gleiche Eingabearray suchen wir nun Mechanismen, wie wir durch Vorausberechnen (dem sogenannten Preprocessing) zukünftige Abfragen mit verschiedenen Intervallgrenzen auf das gleiche Eingabearray beschleunigen können.
 
 Wir benötigen hierfür offensichtlich zusätzlichen Speicher, in dem wir -- zum Beispiel in Form einer $n\times n$-Matrix -- alle Kominationen von Intervallgrenzen $\ell$ und $r$ und deren RMQ-Ergebnis abspeichern.
 
@@ -77,11 +77,15 @@ Andernfalls (dann wenn ein neues Mininum an der Stelle $j$ steht) würden wir $M[
 
 Hierdurch verringern wir dir Preprocessingtime auf $\Oh(n^2)$.
 
-
+\vspace{5mm}
 \section{Effiziente Algorithmen}
+Die nun vorgestellten Algorithmen sollen, anders als die bisher gezeigten trivialen Ideen, in sublinearer Zeit eine Matrix für Abfragen aufbauen.
+
 \subsection{$\sqrt n $ Teile Algorithmus}
 
-Nun erklären wir den $\sqrt{n}$ Teile Algorithmus. Die Grundidee lautet wie folgt, wir teilen unser Eingabearray in $\lceil \sqrt{n} \rceil  $ Buckets auf, in denen wir die Position des aktuellen Minimums speichern (Abb. \ref{sqrt_0}).
+Der erste dieser Algorithmen ist der $\sqrt{n}$ Teile Algorithmus. Die Grundidee lautet wie folgt: wir teilen unser Eingabearray in $\lceil \sqrt{n} \rceil  $ Buckets auf, in denen wir die Position des aktuellen Minimums speichern (Abb. \ref{sqrt_0}).
+
+\newpage
 
 \begin{figure}[h]
 \begin{center}
@@ -91,8 +95,8 @@ Nun erklären wir den $\sqrt{n}$ Teile Algorithmus. Die Grundidee lautet wie folg
 \label{sqrt_0}
 \end{figure}
 
-Dies bringt den Vorteil, das bei einem gegebenen Intervall nicht mehr das komplette Array durchsucht werden muss, sondern nur noch die Entsprechenden Buckets. Hierbei müssen zwei Fälle unterschieden werden. \\
-Fall 1, unser Intervall (l, r) liegt genau am Anfang bzw Ende der Buckets (Abb. \ref{sqrt_1}).
+Dies bringt den Vorteil, das bei einem gegebenen Intervall nicht mehr das komplette Array durchsucht werden muss, sondern nur noch die entsprechenden Buckets. Hierbei müssen zwei Fälle unterschieden werden. \\
+Fall 1: unser Intervall $(\ell, r)$ liegt genau am Anfang bzw. Ende der Buckets (Abb. \ref{sqrt_1}). In diesem Fall können wir einfach die entsprechenden Buckets durchsuchen um unser Minimum zu finden.
 
 \begin{figure}[h]
 \begin{center}
@@ -102,8 +106,7 @@ Fall 1, unser Intervall (l, r) liegt genau am Anfang bzw Ende der Buckets (Abb. 
 \label{sqrt_1}
 \end{figure}
 
-In diesem Fall können wir einfach die entsprechenden Buckets durchsuchen um unser Minimum zu finden. \\
-Bei Fall 2 hingegen, liegt unser Intervall nicht am Anfang bzw. Ende der Buckets was dazu führt, das wir den Anfangs- bzw End-Bucket nicht benutzen dürfen, da dort unter Umständen eine Falsche Postion gespeichert ist und dies zu einem falschen Ergebnis führen würde (Abb. \ref{sqrt_2}).
+Bei Fall 2 hingegen, liegt unser Intervall nicht am Anfang bzw. Ende der Buckets was dazu führt, das wir den Anfangs- bzw End-Bucket nicht benutzen dürfen, da dort unter Umständen eine falsche Postion gespeichert ist und dies zu einem falschen Ergebnis führen würde (Abb. \ref{sqrt_2}).
 
 \begin{figure}[h]
 \begin{center}
@@ -113,10 +116,12 @@ Bei Fall 2 hingegen, liegt unser Intervall nicht am Anfang bzw. Ende der Buckets
 \label{sqrt_2}
 \end{figure}
 
-In diesem Fall müssen wir die Teile des Arrays, in denen wir keinen 'ganzen' Bucket getroffen haben, noch einmal durchsuchen. \\
-Kommen wir nun zur Laufzeitanalyse. Um unsere Bucketes zu initialisieren benötigen wir $\Oh(n)$, da dies in einem Durchlauf des Arrays geschehen kann. Für eine Abfrage hingegen benötigen wir bei Fall 1 nur $\sqrt{n}$ Vergleiche. Für Fall 2 hingegen kommen wir im worst case auf $[\sqrt{n} - 2]$ \footnote{\label{sqrt:1} für die Buckets die wir auf jeden Fall benutzen können} $+$ $[2\cdot(\sqrt{n}-1)]$ \footnote{\label{sqrt:2} für die Teile des Arrays die neu durchsucht werden müssen} was aus multipliziert zu $3 \cdot \sqrt{n} -4 $ wird. Dies liegt offensichtlich in $\Oh (\sqrt{n})$. Somit haben wir eine Preprocessingtime von $\Oh(n)$ und eine Querytime von $\Oh (\sqrt{n})$.
+In diesem Fall müssen wir die Teile des Arrays, in denen wir keinen "`ganzen"' Bucket getroffen haben, noch einmal durchsuchen. \\
+Kommen wir nun zur Laufzeitanalyse. Um unsere Bucketes zu initialisieren benötigen wir $\Oh(n)$, da dies in einem Durchlauf des Arrays geschehen kann. Für eine Abfrage hingegen benötigen wir bei Fall 1 nur $\sqrt{n}$ Vergleiche. Für Fall 2 hingegen kommen wir im worst case auf $[\sqrt{n} - 2]$ \footnote{\label{sqrt:1} für die Buckets die wir auf jeden Fall benutzen können} $+$ $[2\cdot(\sqrt{n}-1)]$ \footnote{\label{sqrt:2} für die Teile des Arrays die neu durchsucht werden müssen} was aus multipliziert zu $3 \cdot \sqrt{n} -4 $ wird. Dies liegt offensichtlich in $\Oh (\sqrt{n})$. 
 
-\subsection{Sparse Table}
+Somit haben wir eine Preprocessingtime von $\Oh(n)$ und eine Querytime von $\Oh (\sqrt{n})$.
+
+\subsection{Sparse Table}\label{spa}
 Als nächstes erörtern wir den Sparse Table Algorithmus (STA). Der STA besteht im Wesentlichen aus zwei Phasen. In Phase 1 wird zunächst eine Matrix $A$ mit $n$ Zeilen und $\lfloor \log n \rfloor +1$ Spalten erstellt.
 
 Der ein oder andere Leser wird sich jetzt fragen, wieso brauchen wir nur $\lfloor \log n \rfloor +1$ Spalten? Dies lässt sich am besten anhand eines Beispiels zeigen. Angenommen wir haben das Eingabearray aus Abb. \ref{sparse_0}.
@@ -158,11 +163,12 @@ Diesen Trick benutzen wir nun um unsere Matrix $A$ aufzubauen. Im Wesentlichen b
 \label{sparse_03}
 \end{figure}
 
-Dies führen wir für jede Position im Array durch. Nun haben wir unsere 'Sparse Table'\footnote{\label{sparse:1} sparse, da unsere Matrix $A$ nur $\lfloor \log n \rfloor +1$ Spalten besitzt, und nicht $n$ Spalten} erstellt und haben damit Phase 1 abgeschlossen.
+\newpage
+Dies führen wir für jede Position im Array durch. Nun haben wir unsere "`Sparse Table"'\footnote{\label{sparse:1} sparse, da unsere Matrix $A$ nur $\lfloor \log n \rfloor +1$ Spalten besitzt, und nicht $n$ Spalten} erstellt und haben damit Phase 1 abgeschlossen.
 
 Anzumerken ist noch das die Initialisierung der Matrix $A$ durch dynamische Programmierung optimiert werden kann. Dazu wird beim Berechnen der Zeilen nicht für jede Spalte das Array komplett durchlaufen, sondern nur noch der Teil des Array der noch nicht besucht wurde.
 
-Kommen wir nun zur Phase 2. Hierbei benutzen wir nun das Intervall innerhalb unseres Arrays in welchem wir das Minimum suchen. Dazu gehen wir wie folgt vor, zunächst suchen wir die Zweierpotenz welche mindestens die Hälfte des Intervalls überdeckt. Auch hier werden wir das Ganze durch ein einfaches Beispiel erläutern.
+Kommen wir nun zur Phase 2. Hierbei benutzen wir nun das Intervall innerhalb unseres Arrays in welchem wir das Minimum suchen. Dazu gehen wir wie folgt vor: zunächst suchen wir die Zweierpotenz, welche mindestens die Hälfte des Intervalls überdeckt. Auch hier werden wir das Ganze durch ein einfaches Beispiel erläutern.
 
 Zunächst sei unser Intervall zwischen Index 1 und 9 gegeben. Das heißt unsere Zweierpotenz ist hier 8. Nun brauchen wir nur noch in den beiden entsprechenden Zeile unserer Matrix $A$ an Position 3\footnote{\label{sparse:2} da $2^3$ = 8} (Abb. \ref{sparse_04}) nachsehen und von den beiden Positionen das Minimum zu bestimmen.
 
@@ -174,7 +180,7 @@ Zunächst sei unser Intervall zwischen Index 1 und 9 gegeben. Das heißt unsere Zw
 \label{sparse_04}
 \end{figure}
 
-Kommen wir nun zur Laufzeitanalyse. Offensichtlich benötigen wir für Phase 1 $\Oh(n \cdot \log n )$ um unsere Matrix $A$ zu berechnen. Für eine Minimumbestimmung hingegen benötigen wir nur zwei Abfragen unserer Matrix $A$ was wir in $\Oh(1)$ schaffen. Daraus ergibt sich eine Laufzeit bei $m$ Abfragen von $\Oh (n \cdot \log n \cdot m)$.
+Zur Laufzeit können wir Folgendes festhalten: Offensichtlich benötigen wir für Phase 1 $\Oh(n \cdot \log n )$ um unsere Matrix $A$ zu berechnen. Für eine Minimumbestimmung hingegen benötigen wir nur zwei Abfragen unserer Matrix $A$ was wir in $\Oh(1)$ schaffen. Daraus ergibt sich eine Laufzeit bei $m$ Abfragen von $\Oh (n \cdot \log n \cdot m)$.
 
 \chapter{Skyline}
 
@@ -276,18 +282,18 @@ Wir können unseren Lösungsansatz noch optimieren. Dazu nutzen wir die Tatsache, 
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=6cm]{picture/optimierung_01.png}
+\includegraphics[width=6.5cm]{picture/optimierung_01.png}
 \end{center}
-\caption{Skyline}
+\caption{Maximalhöhe bei der Skyline}
 \label{optimierung_01}
 \end{figure}
 
 Hier haben wir eine Maximalhöhe von 10 und eine schon gefundene Fläche von 21.
-Daraus ergibt sich, dass wir Teilprobleme der Länge 2 ignorieren können. In der Folgenden Grafik habe wir Teilprobleme die ignoriert werden können Grau hinterlegt.
+Daraus ergibt sich, dass wir Teilprobleme der Länge 2 ignorieren können. In der folgenden Grafik haben wir Teilprobleme die ignoriert werden können in grau hinterlegt.
   
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=6cm]{picture/optimierung_02.png}
+\includegraphics[width=6.5cm]{picture/optimierung_02.png}
 \end{center}
 \caption{Teilprobleme ignorieren}
 \label{optimierung_02}
@@ -297,8 +303,10 @@ Wie sich dies auf die Laufzeit auswirkt, ist schwer abzuschätzen, da dies davon 
 
 
 \subsection{Parallelisierung}
-Wie wir schon im Punkt 1.4.2 gezeigt haben, können wir einen Sparse Table in $\Oh( n \cdot \log n )$ berechnen. Nun stellt sich die Frage, geht dies nicht noch effizienter? \\
-Ja, wenn wir Parallelisierung benutzen. Parallelität ist schon längst Alltag geworden, seien es moderne Grafikkarten (Nvidia, AMD) oder Intels MIC\footnote{\label{optimierung:1}Many-Integrated-Core z.B. Xeon Phi Coprozessor}. Angenommen wir wollen nun unseren Sparse Table berechnen und haben mindestens so viele Threads wie Zeilen. Mit Hilfe einer geeigneten parallelen Sprache (CUDA, OpenCL oder Cilk Plus) können wir nun jede Zeile einem eigenen Thread zuweisen und verringern somit unsere Laufzeit drastisch (Abb. \ref{optimierung_03}). 
+Wie wir schon im Punkt \ref{spa} gezeigt haben, können wir eine Sparse Table in $\Oh( n \cdot \log n )$ berechnen. Nun stellt sich die Frage, geht dies nicht noch effizienter? \\
+Ja, wenn wir Parallelisierung benutzen. Parallelität ist schon längst Alltag geworden, seien es moderne Grafikkarten (Nvidia, AMD) oder Intels MIC\footnote{\label{optimierung:1}Many-Integrated-Core z.B. Xeon Phi Coprozessor}. 
+
+Angenommen wir wollen nun unseren Sparse Table berechnen und haben mindestens so viele Threads wie Zeilen. Mit Hilfe einer geeigneten parallelen Sprache (CUDA, OpenCL oder Cilk Plus) können wir nun jede Zeile einem eigenen Thread zuweisen und verringern somit unsere Laufzeit drastisch (Abb. \ref{optimierung_03}). 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=10cm]{picture/optimierung_03.png}
@@ -306,10 +314,11 @@ Ja, wenn wir Parallelisierung benutzen. Parallelität ist schon längst Alltag gew
 \caption{Pro Zeile ein Thread}
 \label{optimierung_03}
 \end{figure}
-Doch wir haben nicht immer mehr Threads als Zeilen. In diesem Fall werden die Zeilen zyklisch durch iteriert, das heißt jeder Thread berechnen mehrere Zeilen. Dies führt zu einer Allgemein Optimierten Laufzeit von $\Oh (\frac{n}{T} \cdot \log n)$, wobei T die Anzahl der Threads beschreibt.
+
+Doch wir haben nicht immer mehr Threads als Zeilen. In diesem Fall werden die Zeilen zyklisch durchiteriert. Das heißt jeder Thread berechnet mehrere Zeilen. Dies führt zu einer allgemein optimierten Laufzeit von $\Oh (\frac{n}{T} \cdot \log n)$, wobei $T$ die Anzahl der Threads beschreibt.
 
 \newpage
-\section{Sourcecode}
+\section{Anhang: Sourcecode}
 
 \begin{verbatim}
 
