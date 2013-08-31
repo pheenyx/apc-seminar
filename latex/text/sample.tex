@@ -1,66 +1,495 @@
-\chapter[RMQ]{Range Minimum Query}
+\chapter{Range Minimum Query}
 \writer{Felix Lauenroth \& Michael Mardaus}
 
 \section{Einleitung}
 
-Im Folgenden beschäftigen wir uns mit dem $Range~ Minimum~  Query~ (RMQ)$ Algroithmus und dem Skyline Problem. In Kapitel 1 erörtern wir zunächst den $RMQ$ und zeigen verschiedene Implementationen. Kapitel 2 behandelt das Skyline Problem und zeigt unsere Umsetzung.
+Im Folgenden beschäftigen wir uns mit dem \emph{Range Minimum Query} Algorithmus und dem Skyline Problem. In Kapitel 1 definieren wir zunächst die Range Minimum Query und zeigen verschieden performante Implementierungsansätze. Kapitel 2 behandelt das Skyline Problem und zeigt unsere Umsetzung.
 
 \section{Definition}
 
- Kommen wir zunächst zur Definition der $ RMQ $. Als Eingabe wird ein Array genutzt, innerhalb welchem wird die Indexposition des kleinsten Wertes eines gegebenen Intervall's [l, r] suchen oder mathematisch Ausgedrückt:
+ Kommen wir zunächst zur Definition der \textbf{Range Minimum Query} (kurz: RMQ). Gegeben sei ein Array, innerhalb welchem die Indexposition des kleinsten Wertes eines gegebenen Intervalls $[\ell, r]$ gesucht wird --- oder mathematisch ausgedrückt:
 
 \[\text{RMQ}_{A}(\ell,r) = \text{arg} \ \min_{\ell \leq k \leq r } A[k] \]
 
-\section{Naive Ansätze}
-\subsection{Durch iterieren}
+\vspace{-3mm}
 
-Zunächst beschreiben wir eine auf den ersten Blick einfach aussehende Methode. Wir iterieren sequenziell durch das gegebene Intervall und speichern dabei die Indexposition des Minimums. Dies schaffen wir offensichtlich in $\Oh(n)$ \footnote{\label{foot:1} $n$ beschreibt die Länge des Intervalls}. Wie auf den ersten Blick erkennbar ist variiert die Laufzeit mit der Länge des gegebenen Intervalls. Auch bei mehrfach Ausführung der Abfrage verschlechtert sich die Laufzeit um den erheblichen Faktor $m$\footnote{\label{foot:2} $m$ beschreibt die Anzahl der Abfragen}, welches zu einer Laufzeit von $\Oh(n\cdot m)$ bei $m$ Abfragen führt. Doch diese Methode hat auch einen erheblichen Vorteil. Sie funktioniert in-place, das heißt sie benötigt nur eine konstante Menge an Speicher. Denn das durch-iterieren findet in der Eingabeliste statt und ansonsten wird nur Speicherplatz für die Indexposition benötigt.
+
+\begin{figure}[h]
+\begin{center}\includegraphics[width=5cm]{picture/array5.png}
+\caption{Beispiel $\text{RMQ}_A(3,5) = 5$}
+\label{definition}
+\end{center}
+\end{figure}
+
+
+\section{Naive Ansätze}
+\subsection{Linear durch das Array iterieren}
+
+Die erste triviale Idee das Problem zu lösen wäre vermutlich das sequenzielle Durchiterieren durch das gegebene Intervall mit Abspeichern der Indexposition des bis zum aktuellen Schritt gefundenen Minimums. Dies schaffen wir offensichtlich in Linearzeit, also $\Oh(n)$ \footnote{\label{foot:1} $n$ beschreibt hier die Länge des Intervalls}.
+
+Wie auf den ersten Blick erkennbar ist, variiert die Laufzeit mit der Länge des gegebenen Intervalls. Bei mehrfacher Ausführung der Abfrage auf dem gleichen Array verschlechtert sich die Laufzeit sogar um den erheblichen Faktor $m$, wobei $m$ die Anzahl der Abfragen sei. Dies führt somit zu einer Laufzeit von $\Oh(n\cdot m)$ bei $m$ Abfragen. Doch diese Methode hat auch einen Vorteil gegenüber der folgenden Ansätze. Sie funktioniert in-place, das heißt sie benötigt nur eine konstante Menge an Speicher  (nämlich dem des Arrays selbst), denn das Durchiterieren findet im Eingabearray selbst statt. Es wird nur ein zusätzlicher Wert abgespeichert und zwar die Indexposition des bisher gefundenen Minimums.
 
 \subsection{Preprocessing}
 
+Für wiederholte Abfragen auf das gleiche Eingabearray suchen wir nun Mechanismen, wie wir durch Vorausberechnen (dem sogenannten Preprocessing) zukünftige Abfragen mit verschiedenen Intervallgrenzen auf das gleichen Eingabearray beschleunigen können.
+
+Wir benötigen hierfür offensichtlich zusätzlichen Speicher, in dem wir -- zum Beispiel in Form einer $n\times n$-Matrix -- alle Kominationen von Intervallgrenzen $\ell$ und $r$ und deren RMQ-Ergebnis abspeichern.
+
+\begin{figure}[h]
+\begin{minipage}{.5\textwidth}
+\begin{center}
+\includegraphics[width=5cm]{picture/array5.png}
+\end{center}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+\begin{center}
+ $$
+ \bordermatrix{
+  &  &  &  &  &  & r &  \cr
+  & 0 & 1 & 1 & 1 & 1 & 1 & 1 \cr
+  &  & 1 & 1 & 1 & 1 & 1 & 1 \cr
+  &  &  & 2 & 2 & 2 & 2 & 6 \cr
+ \ell &  &  &  & 3 & 4 & \fbox{5} & 6 \cr
+  &  &  &  &  & 4 & 5 & 6 \cr
+  &  &  &  &  &  & 5 & 6 \cr
+  &  &  &  &  &  &  & 6 }
+ $$
+\end{center}
+\end{minipage}
+
+\caption{Komplette $n\times n$-Matrix nach Preprocessing}
+\label{prepro}
+\end{figure}
+
+Ab jetzt haben wir es also mit zwei verschiedenen Laufzeiten zu tun. Zum Einen der Laufzeit für eine Suchanfrage zum Auffinden der Lösung in der zuvor erstellten Lösungsmatrix. Wir nennen sie Querytime. Im gerade beschriebenen Fall ist sie konstant $\Rightarrow \Oh(1)$.
+
+Und zum Anderen mit der Laufzeit für das Preprocessing, also dem Erstellen der Lösungsmatrix selbst. In diesem Fall wäre die Zeit für das Preprocessing in $\Oh(n^3)$, da wir für jede der $n^2$ Kombinationen von $\ell$ und $r$ einmal das aufgespannte Intervall durchsuchen müssen.
+
+
 \subsection{Preprocessing mit dynamischer Programmierung}
+
+Wir können das Preprocessing nach diesem Schema aber noch eine Stufe beschleunigen, indem wir dynamische Programmierung beim Erstellen der Matrix verwenden.
+
+Für jede Zeile der Preprocessing-Matrix $M$, die es zu befüllen gilt, können wir sagen:
+Wenn $A(M[i][j-1]) < A(j)$, also wenn der zuvor in der Preprocessing-Matrix gespeicherte Wert kleiner ist als der aktuelle, dann kann dieser auch in die nächste Matrixzelle eingetragen werden, d.h. es ist auch $M[i][j] = M[i][j-1]$. 
+
+Andernfalls (dann wenn ein neues Mininum an der Stelle $j$ steht) würden wir $M[i][j] = j$ setzen.
+
+Hierdurch verringern wir dir Preprocessingtime auf $\Oh(n^2)$.
+
 
 \section{Effiziente Algorithmen}
 \subsection{$\sqrt n $ Teile Algorithmus}
 
+TODO
+\newpage
+
 \subsection{Sparse Table}
-Als nächstes erörtern wir den Sparse Table Algorithmus ($STA$). Der $STA$ besteht im Wesentlichen aus zwei Phasen. In Phase 1 wird zunächst eine Matrix $A$ mit $n$ Zeilen und $\lfloor \log n \rfloor +1$ Spalten erstellt. Der ein oder andere Leser wird sich jetzt fragen, wieso brauchen wir nur $\lfloor \log n \rfloor +1$ Spalten? Dies lässt sich am besten anhand eines Beispiels zeigen. Angenommen wir haben folgendes Eingabearray (Abb. \ref{sparse_0}) .
+Als nächstes erörtern wir den Sparse Table Algorithmus (STA). Der STA besteht im Wesentlichen aus zwei Phasen. In Phase 1 wird zunächst eine Matrix $A$ mit $n$ Zeilen und $\lfloor \log n \rfloor +1$ Spalten erstellt.
+
+Der ein oder andere Leser wird sich jetzt fragen, wieso brauchen wir nur $\lfloor \log n \rfloor +1$ Spalten? Dies lässt sich am besten anhand eines Beispiels zeigen. Angenommen wir haben das Eingabearray aus Abb. \ref{sparse_0}.
+
 \begin{figure}[h]
+\begin{center}
 \includegraphics[width=6cm]{picture/sparse_0.png}
+\end{center}
 \caption{Eingabearray}
 \label{sparse_0}
 \end{figure}
+
 Zunächst benötigen wir die Zweierpotenz, welche mindestens die Hälfte des Arrays überdeckt. In unserem Beispiel ist es die 8. Jetzt kommen wir zu dem Trick, und zwar benutzen wir nun die Tatsache das wenn wir zweimal diese Zweierpotenz benutzen, wir das Array komplett überdecken können (Abb. \ref{sparse_01}).
+
 \begin{figure}[h]
+\begin{center}
 \includegraphics[width=6cm]{picture/sparse_01.png}
+\end{center}
 \caption{Überdeckung}
 \label{sparse_01}
 \end{figure}
+
 Dadurch können wir das Minimum des Arrays ermitteln, indem wir jeweils das Minimum der beiden Zweierpotenzen bestimmen und davon einfach den kleineren Wert benutzen.
-Diesen Trick benutzen wir nun um unsere Matrix $A$ aufzubauen. Im Wesentlich baut sich $A$ folgendermaßen auf. Jede Zeile steht für die entsprechende Position im Array und die Spalten entsprechen einer Zweierpotenz (Abb. \ref{sparse_02} und \ref{sparse_03}).
+Diesen Trick benutzen wir nun um unsere Matrix $A$ aufzubauen. Im Wesentlichen baut sich $A$ folgendermaßen auf. Jede Zeile steht für die entsprechende Position im Array und die Spalten entsprechen einer Zweierpotenz (Abb. \ref{sparse_02} und \ref{sparse_03}).
+
 \begin{figure}[h]
+\begin{center}
 \includegraphics[width=10cm]{picture/sparse_02.png}
+\end{center}
 \caption{Erste Zeile Matrix $A$}
 \label{sparse_02}
 \end{figure}
+
 \begin{figure}[h]
+\begin{center}
 \includegraphics[width=10cm]{picture/sparse_03.png}
+\end{center}
 \caption{Zweite Zeile Matrix $A$}
 \label{sparse_03}
 \end{figure}
-Dies führen wir für jede Position im Array durch. Nun haben wir unseren 'Sparse Table'\footnote{\label{sparse:1} sparse, da unsere Matrix $A$ nur $\lfloor \log n \rfloor +1$ Spalten besitzt, und nicht $n$ Spalten} erstellt und haben damit Phase 1 abgeschlossen. Anzumerken ist noch das die Initialisierung der Matrix $A$ durch dynamische Programmierung optimiert werden kann. Dazu wird beim Berechnen der Zeilen nicht für jede Spalte das Array komplett durchlaufen, sondern nur noch der Teil des Array der noch nicht besucht wurde.
+
+Dies führen wir für jede Position im Array durch. Nun haben wir unsere 'Sparse Table'\footnote{\label{sparse:1} sparse, da unsere Matrix $A$ nur $\lfloor \log n \rfloor +1$ Spalten besitzt, und nicht $n$ Spalten} erstellt und haben damit Phase 1 abgeschlossen.
+
+Anzumerken ist noch das die Initialisierung der Matrix $A$ durch dynamische Programmierung optimiert werden kann. Dazu wird beim Berechnen der Zeilen nicht für jede Spalte das Array komplett durchlaufen, sondern nur noch der Teil des Array der noch nicht besucht wurde.
+
 Kommen wir nun zur Phase 2. Hierbei benutzen wir nun das Intervall innerhalb unseres Arrays in welchem wir das Minimum suchen. Dazu gehen wir wie folgt vor, zunächst suchen wir die Zweierpotenz welche mindestens die Hälfte des Intervalls überdeckt. Auch hier werden wir das Ganze durch ein einfaches Beispiel erläutern.
-Zunächst sei unser Intervall zwischen Index 1 und 9 gegeben. Das heißt unsere Zweierpotenz ist hier 8. Nun brauchen wir nur noch in den beiden entsprechenden Zeile unserer Matrix $A$ an Position 3\footnote{\label{sparse:2} da $2^3$ = 8} (Abb. \ref{sparse_04}).
+
+Zunächst sei unser Intervall zwischen Index 1 und 9 gegeben. Das heißt unsere Zweierpotenz ist hier 8. Nun brauchen wir nur noch in den beiden entsprechenden Zeile unserer Matrix $A$ an Position 3\footnote{\label{sparse:2} da $2^3$ = 8} (Abb. \ref{sparse_04}) nachsehen und von den beiden Positionen das Minimum zu bestimmen.
+
 \begin{figure}[h]
+\begin{center}
 \includegraphics[width=10cm]{picture/sparse_04.png}
+\end{center}
 \caption{Abfrage}
 \label{sparse_04}
 \end{figure}
-nachsehen und von den beiden Positionen das Minimum zu bestimmen. \\
-Kommen wir nun zur Laufzeit Analyse. Offensichtlich benötigen wir für Phase 1 $\Oh(n \cdot \log n )$ um unsere Matrix $A$ zu berechnen. Für eine Minimumbestimmung hingegen benötigen wir nur zwei Abfragen unserer Matrix $A$ welches wir in $\Oh 1$ schaffen. Daraus ergibt sich eine Laufzeit bei $m$ Abfragen von $\Oh (n \cdot \log n \cdot m)$.
+
+Kommen wir nun zur Laufzeitanalyse. Offensichtlich benötigen wir für Phase 1 $\Oh(n \cdot \log n )$ um unsere Matrix $A$ zu berechnen. Für eine Minimumbestimmung hingegen benötigen wir nur zwei Abfragen unserer Matrix $A$ was wir in $\Oh(1)$ schaffen. Daraus ergibt sich eine Laufzeit bei $m$ Abfragen von $\Oh (n \cdot \log n \cdot m)$.
 
 \chapter{Skyline}
 
+Als Anwendungsbeispiel haben wir das Skyline-Problem zur Bearbeitung erhalten. Es ist wie folgt beschrieben:
+
 \section{Problemstellung}
 
-\section{Anhang}
+Gegeben sei die zweidimensionale Projektion der Skyline einer Stadt aus verschieden hohen Gebäuden mit einheitlicher Breite. Uns als Werbeagentur wird es gestattet, auf eine zusammenhängende rechteckige Fläche von Gebäuden der Skyline ein Werbebanner aufzukleben. Unsere Aufgabe ist es nun das Werbebanner möglichst groß zu wählen, sodass man es schon von Weitem sehen kann.
+
+Beispielsweise sieht die Skyline der Stadt folgendermaßen aus:
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=5cm]{picture/skyline-test.png}
+\end{center}
+\caption{Abfrage}
+\label{skyline}
+\end{figure}
+
+\newpage
+\section{Problemlösung}
+
+Wie schon in Abbildung \ref{skyline} zu sehen, lässt sich eine gegebene Skyline einfach als Array von Gebäudehöhen auffassen (im Beispiel 3,2,4,6,5,4,3). Doch wie kommt nun die Range Minimum Query ins Spiel? 
+
+Unsere Idee ist die Folgende: Um die größtmögliche Fläche zu finden nähern wir uns von unten nach oben der Lösung im divide \& conquer Prinzip an. Die erste Möglichkeit für ein Banner wäre über die gesamte Breite der zur Verfügung stehenden Skyline ein Recheck anzusetzen.\\
+Dieses Rechteck kann allerdings nur so hoch wie das niedrigste Gebäude sein, da wir sonst ein freies Feld über diesem Gebäude verdecken würden. Wir suchen also zunächst das niedrigste Gebäude in der Skyline, welches das Range Minimum unseres kompletten Eingabearrays darstellt.
+
+\vspace{5mm}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=5cm]{picture/skyline-left-right1.png}
+\end{center}
+\caption{Minimum suchen, Fläche berechnen, Teilen}
+\label{skylineteilen}
+\end{figure}
+
+Doch eventuell ist dieses Recheck nicht das größtmögliche. Dann müsste es ein größeres Rechteck links oder rechts von diesem Gebäude geben. Auf jeden Fall gehört dann aber das kleinste Gebäude nicht mehr dazu.\\
+Wir suchen also ein größeres Rechteck in den verbleibenden Skylineflächen links (in Abbildung \ref{skylineteilen} grün dargestellt) und rechts (rot dargestellt) des bisherigen kleinsten Gebäudes, indem wir wieder das Range Mininum der linken Restskyline suchen, ein Rechteck mit dieser Höhe und der restlichen Intervallbreite links konstruieren und dessen Fläche mit der zuvor ermittelten maximalen Fläche vergleichen.
+
+Ebenso suchen wir in der rechten Restskyline das kleineste Gebäude (Range Minimum) und bilden auch hier das Rechteck aus Restbreite rechts und Höhe dieses Gebäudes.
+Nun werden wieder diese beiden Range Minima Gebäude weggelassen und in den verbleibenden restlichen vier Gebieten ebenso verfahren.
+
+Nach diesem Schema verfahren wir solang bis die Teilprobleme nur noch eine Breite von eins haben und so keine weiteren Teilprobleme entstehen. Das bis dahin gefundene Rechteck mit maximaler Fläche ist die Lösung des Problems.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=5cm]{picture/skyline-end.png}
+\end{center}
+\caption{Größtmögliche Fläche = 16}
+\label{skylineende}
+\end{figure}
+
+
+
+Unser Hauptalgorithmus besteht aus eine Queue von Teilproblemen und vier Schritten, die zyklisch auf den Teilproblemen der Queue ausgeführt werden, bis diese leer und das Ergebnis gefunden ist.
+
+\vspace{3mm}
+\begin{figure}[h]
+
+\begin{tabular}[t]{lr}
+
+\begin{minipage}{.6\textwidth}
+\begin{verbatim}
+while ( !Q.empty() ){
+    //Intervall holen
+    Interval(left, right) = Q.pop();
+	
+    //Minimum suchen
+    min = RMQ( Interval(left, right) );
+	
+    //Fläche vergleichen
+    area = min * (right - left + 1);
+    if ( area > max ) max = area;
+	
+    //Teilen rechts/links
+    Q.add( Intervall(left, min - 1) );
+    Q.add( Intervall(min + 1, right) );
+}
+\end{verbatim}
+\end{minipage}
+
+&
+
+\begin{minipage}{.4\textwidth}
+\begin{flushright}
+\includegraphics[width=40mm]{picture/algo-schritt4.png}
+\end{flushright}
+\end{minipage}
+\\
+\end{tabular}
+
+\caption{Zyklischer Algorithmus}
+\label{skylinealgo}
+\end{figure}
+
+\newpage
+\section{Sourcecode}
+
+\begin{verbatim}
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class RMQ {
+
+    /**
+     * the main function.
+     * @param args commandline args
+     */
+    public static void main(final String[] args) {
+
+        BufferedReader reader = new BufferedReader(
+                                new InputStreamReader(System.in));
+        try {
+            while (true) {
+                String line = reader.readLine();
+
+                if (line.startsWith("END")) {
+                    break;
+                }
+
+                // first line n m
+                String[] splittedLine = line.split(" ");
+                long n = Long.parseLong(splittedLine[0]);
+                int m = Integer.parseInt(splittedLine[1]);
+
+                // second line h
+                line = reader.readLine();
+                String[] strh = line.split(" ");
+                long[] h = new long[m];
+                for (int i = 0; i < m; i++) {
+                    h[i] = Long.parseLong(strh[i]);
+                }
+
+                // start with skyline
+                long[] r = new long[(int) n];
+                r = generateH(n, m, h);
+                System.out.println(skyline(r, n));
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Solves the skyline problem. A skyline is the outline formed by a group of
+     * buildings against the sky. A certain city has a beautiful skyline that's
+     * visible to everybody as they approach it by car. You have bought the
+     * rights to place an advertisement over it, and you would like to do so
+     * while preserving the shape of the city. The skyline is formed by n
+     * buildings, all with a width of 1 and each with a different height. You
+     * will place your ad on a rectangle of maximum area that is fully contained
+     * within the interior of the skyline.
+     *
+     * @param r   the array containing the building heights
+     * @param n   the number of buildings
+     * @return the maximum area on the buildings
+     */
+    public static long skyline(final long[] r, final long n) {
+        if (n == 1) {
+            return r[(int) n - 1];
+        } else {
+            int[][] sparseTable = process2(r, r.length);
+
+            int minimum = min(0, (int) n - 1, r, sparseTable);
+            Queue<int[]> interval = new LinkedList<int[]>();
+            long area = n * r[minimum];
+
+            if (minimum == 0) {
+                if (r[0] > area) {
+                    area = r[0];
+                }
+            } else {
+                int[] links = new int[2];
+                links[0] = 0;
+                links[1] = minimum - 1;
+                interval.add(links);
+            }
+
+            if (minimum == n - 1) {
+                if (r[minimum] > area) {
+                    area = r[minimum];
+                }
+            } else {
+                int[] rechts = new int[2];
+                rechts[0] = minimum + 1;
+                rechts[1] = (int) n - 1;
+                interval.add(rechts);
+            }
+
+            while (!interval.isEmpty()) {
+
+                int[] tmp = interval.poll();
+                int minTmp = min(tmp[0], tmp[1], r, sparseTable);
+
+                long tmpArea = r[minTmp] * (tmp[1] - tmp[0] + 1);
+                if (tmpArea > area) {
+                    area = tmpArea;
+                }
+
+                // links
+                if (tmp[0] == minTmp || tmp[0] == minTmp - 1) {
+                    if (r[tmp[0]] > area) {
+                        area = r[tmp[0]];
+                    }
+                } else {
+                    int[] linksTmp = new int[2];
+                    linksTmp[0] = tmp[0];
+                    linksTmp[1] = minTmp - 1;
+                    interval.add(linksTmp);
+                }
+
+                // rechts
+                if (minTmp == tmp[1] || minTmp + 1 == tmp[1]) {
+                    if (r[tmp[1]] > area) {
+                        area = r[tmp[1]];
+                    }
+                } else {
+                    int[] rechtsTmp = new int[2];
+                    rechtsTmp[0] = minTmp + 1;
+                    rechtsTmp[1] = tmp[1];
+                    interval.add(rechtsTmp);
+                }
+            }
+            return area;
+        }
+    }
+
+    /**
+     * used to preprocess the n heights out of the m given start vectors in h.
+     *
+     * @param n
+     *            number of buildings
+     * @param m
+     *            number of elements in h
+     * @param h
+     *            start vector with m inital heights
+     * @return the buildingheights array with length n
+     */
+    public static long[] generateH(final long n, final int m, final long[] h) {
+        int j = 0;
+        int s = 0;
+        long[] r = new long[(int) n];
+        for (int i = 0; i <= n - 1; ++i) {
+            r[i] = h[j];
+            s = (j + 1) % m;
+            h[j] = ((h[j] ^ h[s]) + 13) % 835454957;
+            j = s;
+        }
+        return r;
+    }
+
+    /**
+     * RMQ function. searches the range minimum in r in O(1)
+     *
+     * @param i   start of the query range
+     * @param j   end of the query range
+     * @param r   the range to be searched in
+     * @param M   the preprocessed sparse matrix
+     * @return the index of the minimum in r between i and j
+     */
+    public static int min(final int i, 
+                            final int j, 
+                            final long[] r, 
+                            final int[][] M) {
+
+        int k = (int) ((Math.log(j - i + 1) / Math.log(2)));
+        int mini = M[(int) (j - (1 << k) + 1)][k]; // 1<<k = 2^k
+
+        if (r[(int) M[i][k]] <= r[(int) mini]) {
+            return M[i][k];
+        } else {
+            return mini;
+        }
+    }
+
+    /**
+     * preprocesses the array A for quicker RMQ in O(n*log(n)).
+     *
+     * @param A  the given array
+     * @param N  size of the array
+     * @return   the sparse Matrix used in RMQ
+     */
+    public static int[][] process2(final long[] A, final int N) {
+        int i, j;
+
+        int[][] M = new int[N][(int) Math.ceil(Math.log(N) / Math.log(2)) + 1];
+        // initialize M for the intervals with length 1
+        for (i = 0; i < N; i++) {
+            M[i][0] = i;
+        }
+        // compute values from smaller to bigger intervals
+        for (j = 1; 1 << j <= N; j++) {
+            for (i = 0; i + (1 << j) - 1 < N; i++) {
+                if (A[(int) M[i][j-1]] < A[(int) M[i + (1 << (j - 1))][j-1]]){
+                    M[i][j] = M[i][j - 1];
+                } else {
+                    M[i][j] = M[i + (1 << (j - 1))][j - 1];
+                }
+            }
+        }
+        return M;
+    }
+
+    /**
+     * function to visualize the skyline.
+     *
+     * @param r  the array with the building heights
+     */
+    public static void print(final long[] r) {
+        // find max in array
+        long n = r.length;
+        long[] neu = new long[(int) n];
+        neu = r.clone();
+        Arrays.sort(neu);
+        long maxheight = neu[(int) (n - 1)];
+
+        // draw skyline
+        for (long i = maxheight; i >= 1; i--) {
+            System.out.print("|");
+            for (long k = 0; k < n; k++) {
+                if (r[(int) k] / i > 0) {
+                    System.out.print("â??|");
+                } else {
+                    System.out.print(" |");
+                }
+            }
+            System.out.println();
+        }
+        System.out.print("|");
+        for (int i = 0; i < n; i++) {
+            System.out.print(i / 10 + "|");
+        }
+        System.out.println();
+        System.out.print("|");
+        for (int i = 0; i < n; i++) {
+            System.out.print(i % 10 + "|");
+        }
+        System.out.println();
+    }
+}
+
+
+\end{verbatim}
